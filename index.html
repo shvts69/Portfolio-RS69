@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ross Portfolio — Galaxy</title>
+  <link rel="stylesheet" href="styles.css?v=19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background: HD image + WebGL living light overlay -->
+  <div class="space-bg"></div>
+  <canvas id="nebula-canvas"></canvas>
+  <canvas id="stars-canvas"></canvas>
+
+  <header class="header">
+    <h1 class="header__title">
+      <span class="header__name">ROSS</span>
+      <span class="header__sub">PORTFOLIO</span>
+    </h1>
+    <p class="header__tagline">Explore my universe of projects</p>
+    <div class="scroll-hint">
+      <span class="scroll-hint__text">scroll to explore</span>
+      <div class="scroll-hint__arrow"></div>
+    </div>
+  </header>
+
+  <main class="galaxies">
+    <section class="galaxy" data-url="https://vichna-pamyat.com.ua/" data-color="purple">
+      <div class="galaxy__orbit">
+        <canvas class="galaxy__canvas" width="600" height="400"></canvas>
+      </div>
+      <div class="galaxy__info">
+        <h2 class="galaxy__name">Vichna Pamyat</h2>
+        <p class="galaxy__desc">Memorial site — a place of eternal memory and love</p>
+        <span class="galaxy__link">Enter Galaxy &rarr;</span>
+      </div>
+    </section>
+
+    <section class="galaxy" data-url="https://timma-fight.vercel.app" data-color="blue">
+      <div class="galaxy__orbit">
+        <canvas class="galaxy__canvas" width="600" height="400"></canvas>
+      </div>
+      <div class="galaxy__info">
+        <h2 class="galaxy__name">TiMMA Fight</h2>
+        <p class="galaxy__desc">MMA fighter portfolio — strength, discipline, victory</p>
+        <span class="galaxy__link">Enter Galaxy &rarr;</span>
+      </div>
+    </section>
+
+    <section class="galaxy" data-url="https://rock-band-site.vercel.app" data-color="orange">
+      <div class="galaxy__orbit">
+        <canvas class="galaxy__canvas" width="600" height="400"></canvas>
+      </div>
+      <div class="galaxy__info">
+        <h2 class="galaxy__name">5051 Band</h2>
+        <p class="galaxy__desc">Pixel art rock band site — music, energy, Manhattan vibes</p>
+        <span class="galaxy__link">Enter Galaxy &rarr;</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Ross — Built among the stars</p>
+  </footer>
+
+  <script src="script.js?v=19"></script>
+</body>
+</html>
