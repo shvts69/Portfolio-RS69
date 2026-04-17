@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ross Portfolio — Galaxy</title>
-  <link rel="stylesheet" href="styles.min.css?v=33">
+  <title>RS69 — Rogue Signal 69</title>
+  <link rel="stylesheet" href="styles.min.css?v=51">
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
@@ -32,11 +32,29 @@
   ></model-viewer>
 
   <header class="header">
-    <h1 class="header__title">
-      <span class="header__name">ROSS</span>
-      <span class="header__sub">PORTFOLIO</span>
-    </h1>
-    <p class="header__tagline">Explore my universe of projects</p>
+    <div class="header__mark">
+      <svg class="orbit-ring orbit-ring--back" viewBox="0 0 400 220" aria-hidden="true">
+        <defs>
+          <linearGradient id="shimmerGrad" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="1" spreadMethod="reflect">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="40%" stop-color="#a78bfa"/>
+            <stop offset="60%" stop-color="#60a5fa"/>
+            <stop offset="100%" stop-color="#ffffff"/>
+            <animateTransform attributeName="gradientTransform" type="translate" values="-1,-1;1,1;-1,-1" dur="4s" repeatCount="indefinite"/>
+          </linearGradient>
+        </defs>
+        <path d="M 356.9,59 A 165,95 -18 0,1 43.1,161 A 165,95 -18 0,1 356.9,59 Z" fill="none" stroke="url(#shimmerGrad)" stroke-width="1.5" opacity="0.85" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <h1 class="header__title">
+        <span class="header__name">RS<sup class="header__sup">69</sup></span>
+      </h1>
+      <svg class="orbit-ring orbit-ring--front" viewBox="0 0 400 220" aria-hidden="true">
+        <path d="M 356.9,59 A 165,95 -18 0,1 43.1,161 A 165,95 -18 0,1 356.9,59 Z" fill="none" stroke="url(#shimmerGrad)" stroke-width="1.5" opacity="0.85" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="orbit-planet" aria-hidden="true"></div>
+    </div>
+    <p class="header__sub">ROGUE SIGNAL 69 &mdash; CREATIVE DEVELOPER STUDIO</p>
+    <p class="header__tagline">Origin unknown. Quality undeniable.</p>
     <div class="scroll-hint">
       <span class="scroll-hint__text">scroll to explore</span>
       <div class="scroll-hint__arrow"></div>
@@ -44,13 +62,14 @@
   </header>
 
   <main class="galaxies">
-    <section class="galaxy" data-url="https://vichna-pamyat.com.ua/" data-color="purple">
+    <section class="galaxy" data-url="https://rock-band-site.vercel.app" data-color="orange">
       <div class="galaxy__orbit">
         <canvas class="galaxy__canvas" width="600" height="400"></canvas>
       </div>
       <div class="galaxy__info">
-        <h2 class="galaxy__name">Vichna Pamyat</h2>
-        <p class="galaxy__desc">Memorial site — a place of eternal memory and love</p>
+        <h2 class="galaxy__name">5051 Band</h2>
+        <p class="galaxy__desc">Pixel art rock band site — music, energy, Manhattan vibes</p>
+        <span class="galaxy__stack">HTML &middot; CSS &middot; JavaScript &middot; Canvas&nbsp;2D</span>
         <span class="galaxy__link">Enter Galaxy &rarr;</span>
       </div>
     </section>
@@ -62,26 +81,28 @@
       <div class="galaxy__info">
         <h2 class="galaxy__name">TiMMA Fight</h2>
         <p class="galaxy__desc">MMA fighter portfolio — strength, discipline, victory</p>
+        <span class="galaxy__stack">Next.js &middot; TypeScript &middot; Framer&nbsp;Motion</span>
         <span class="galaxy__link">Enter Galaxy &rarr;</span>
       </div>
     </section>
 
-    <section class="galaxy" data-url="https://rock-band-site.vercel.app" data-color="orange">
+    <section class="galaxy" data-url="https://vichna-pamyat.com.ua/" data-color="purple">
       <div class="galaxy__orbit">
         <canvas class="galaxy__canvas" width="600" height="400"></canvas>
       </div>
       <div class="galaxy__info">
-        <h2 class="galaxy__name">5051 Band</h2>
-        <p class="galaxy__desc">Pixel art rock band site — music, energy, Manhattan vibes</p>
+        <h2 class="galaxy__name">Vichna Pamyat</h2>
+        <p class="galaxy__desc">Memorial site — a place of eternal memory and love</p>
+        <span class="galaxy__stack">Next.js &middot; Supabase &middot; Telegram&nbsp;API</span>
         <span class="galaxy__link">Enter Galaxy &rarr;</span>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 Ross — Built among the stars</p>
+    <p>&copy; 2026 RS69 &mdash; Rogue Signal. Origin unknown. Quality undeniable.</p>
   </footer>
 
-  <script src="script.min.js?v=42"></script>
+  <script src="script.min.js?v=49"></script>
 </body>
 </html>

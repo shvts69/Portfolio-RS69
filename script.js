@@ -972,17 +972,33 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     scrollPushVel+=nv*2.5;
   });
 
-  // Waypoint system — astronaut drifts between random screen positions
+  // Waypoint system — astronaut drifts across the full screen
   function randomPos(){
     return {
-      x: (Math.random()-0.5)*innerWidth*0.6,
-      y: (Math.random()-0.5)*innerHeight*0.5
+      x: (Math.random()-0.5)*innerWidth*0.85,
+      y: (Math.random()-0.5)*innerHeight*0.75
     };
   }
-  let wp=randomPos(), nextWp=randomPos();
-  let wpT=0, wpDur=12+Math.random()*8; // 12-20 seconds per waypoint
+  // Pick a next waypoint that's far from the current one — forces full-screen coverage
+  function farPos(from){
+    const minDist=Math.min(innerWidth,innerHeight)*0.45;
+    let p;
+    for(let i=0;i<6;i++){
+      p=randomPos();
+      const dx=p.x-from.x, dy=p.y-from.y;
+      if(dx*dx+dy*dy>minDist*minDist) return p;
+    }
+    return p;
+  }
+  let wp=randomPos(), nextWp=farPos(wp);
+  let wpT=0, wpDur=6+Math.random()*4; // 6-10 seconds per waypoint
 
-  let curX=wp.x, curY=wp.y;
+  // Entry: start offscreen at a random angle, fly into view
+  const entryAngle=Math.random()*Math.PI*2;
+  const entryDist=Math.max(innerWidth,innerHeight)*1.2;
+  let curX=Math.cos(entryAngle)*entryDist;
+  let curY=Math.sin(entryAngle)*entryDist;
+  let entryT=0;
 
   // Thought bubble
   const thoughts=[
@@ -1039,9 +1055,9 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     wpT+=0.016;
     if(wpT>=wpDur){
       wp=nextWp;
-      nextWp=randomPos();
+      nextWp=farPos(wp);
       wpT=0;
-      wpDur=12+Math.random()*8;
+      wpDur=6+Math.random()*4;
     }
     const progress=wpT/wpDur;
     // Smooth ease in-out
@@ -1055,8 +1071,11 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
 
     const targetX=baseX+driftX;
     const targetY=baseY+driftY-scrollPush;
-    curX+=(targetX-curX)*0.015;
-    curY+=(targetY-curY)*0.015;
+    entryT+=0.016;
+    const entryEase=Math.min(1,entryT/2.8);
+    const lerp=0.015+(0.085-0.015)*(1-entryEase);
+    curX+=(targetX-curX)*lerp;
+    curY+=(targetY-curY)*lerp;
 
     // Camera orbit
     const theta=(t*8)%360+Math.sin(t*0.07)*25;
@@ -1098,4 +1117,39 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     requestAnimationFrame(animate);
   }
   animate();
+})();
+
+
+/* ===== 11. RS69 ORBIT PLANET — depth-aware (z-index flips when behind/in front of text) ===== */
+(function initOrbitPlanet(){
+  const mark=document.querySelector('.header__mark');
+  const planet=document.querySelector('.orbit-planet');
+  if(!mark||!planet) return;
+
+  // Ellipse in SVG viewBox (400x220): center (200,110), rx=165, ry=95, tilted -18°
+  const CX=200, CY=110, RX=165, RY=95, VB_W=400, VB_H=220;
+  const ROT=-18*Math.PI/180;
+  const COS=Math.cos(ROT), SIN=Math.sin(ROT);
+  const DUR=6000;
+  function svgWidthRatio(){ return innerWidth<=768 ? 1.4 : 1.3; }
+  const start=performance.now();
+
+  function tick(now){
+    const t=((now-start)%DUR)/DUR;
+    const a=t*Math.PI*2;
+    const ex=RX*Math.cos(a), ey=RY*Math.sin(a);
+    const pxVB=CX+ex*COS-ey*SIN;
+    const pyVB=CY+ex*SIN+ey*COS;
+
+    const markW=mark.offsetWidth;
+    const k=markW*svgWidthRatio()/VB_W;
+    const dx=(pxVB-CX)*k;
+    const dy=(pyVB-CY)*k;
+
+    planet.style.transform='translate('+dx+'px,'+dy+'px)';
+    planet.style.zIndex=(pyVB<CY)?'0':'2';
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
 })();

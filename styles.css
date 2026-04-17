@@ -94,7 +94,41 @@ body {
   align-items: center; justify-content: center;
   min-height: 100vh; text-align: center; padding: 2rem;
 }
-.header__title { display: flex; flex-direction: column; }
+.header__mark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+  margin-bottom: 5rem;
+}
+.orbit-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  aspect-ratio: 400 / 220;
+  pointer-events: none;
+  overflow: visible;
+  filter: drop-shadow(0 0 14px rgba(167, 139, 250, 0.5));
+}
+.orbit-ring--back  { z-index: 0; clip-path: inset(0 0 50% 0); }
+.orbit-ring--front { z-index: 2; clip-path: inset(50% 0 0 0); }
+.header__title { position: relative; z-index: 1; display: flex; flex-direction: column; }
+.orbit-planet {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 14px; height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff 0%, #a78bfa 40%, #60a5fa 60%, #fff 100%);
+  background-size: 200% 200%;
+  animation: shimmer-text 4s ease-in-out infinite;
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.75), 0 0 28px rgba(96, 165, 250, 0.45);
+  pointer-events: none;
+  will-change: transform;
+  transform: translate(0, 0);
+}
 .header__name {
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(4rem, 12vw, 10rem);
@@ -106,15 +140,25 @@ body {
   animation: shimmer-text 4s ease-in-out infinite;
   filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.3));
 }
+.header__sup {
+  font-size: 0.4em; font-weight: 700;
+  letter-spacing: 0.1em; vertical-align: super;
+  margin-left: 0.15em;
+}
 .header__sub {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1rem, 3vw, 2rem);
-  font-weight: 400; letter-spacing: 1em;
-  color: rgba(255, 255, 255, 0.5); margin-top: -0.5rem;
+  font-size: clamp(0.7rem, 1.4vw, 1rem);
+  font-weight: 400; letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.55);
 }
 .header__tagline {
-  margin-top: 2rem; font-size: clamp(0.9rem, 2vw, 1.3rem);
-  font-weight: 300; color: rgba(255, 255, 255, 0.4); letter-spacing: 0.2em;
+  margin-top: 1.2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(0.75rem, 1.3vw, 1rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
 }
 @keyframes shimmer-text {
   0%, 100% { background-position: 0% 50%; }
@@ -191,28 +235,48 @@ body {
   0% { background-position: 100% 0; }
   100% { background-position: -100% 0; }
 }
-.galaxy:nth-child(2) .galaxy__name {
+.galaxy[data-color="blue"] .galaxy__name {
   background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, #fff 20%, rgba(96,165,250,0.9) 50%, #fff 80%, rgba(255,255,255,0.4) 100%);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: name-scan 6s linear infinite;
 }
-.galaxy:nth-child(2) .galaxy__name::after {
+.galaxy[data-color="blue"] .galaxy__name::after {
   background: linear-gradient(90deg, transparent, rgba(96,165,250,0.6), transparent);
 }
-.galaxy:nth-child(3) .galaxy__name {
+.galaxy[data-color="orange"] .galaxy__name {
   background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, #fff 20%, rgba(251,146,60,0.9) 50%, #fff 80%, rgba(255,255,255,0.4) 100%);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: name-scan 6s linear infinite;
 }
-.galaxy:nth-child(3) .galaxy__name::after {
+.galaxy[data-color="orange"] .galaxy__name::after {
   background: linear-gradient(90deg, transparent, rgba(251,146,60,0.6), transparent);
 }
 .galaxy__desc {
   font-size: clamp(0.9rem, 2vw, 1.1rem); font-weight: 300;
   color: rgba(255,255,255,0.5); line-height: 1.6;
-  margin-bottom: 1.5rem; max-width: 400px;
+  margin-bottom: 0.6rem; max-width: 400px;
+  text-wrap: balance;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+.galaxy__stack {
+  display: block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 .galaxy__link {
   display: inline-block; font-family: 'Orbitron', sans-serif;
@@ -228,13 +292,13 @@ body {
   background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(96,165,250,0.1));
   text-shadow: 0 0 12px rgba(167,139,250,0.6);
 }
-.galaxy:nth-child(2):hover .galaxy__link {
+.galaxy[data-color="blue"]:hover .galaxy__link {
   border-color: rgba(96,165,250,0.8);
   box-shadow: 0 0 20px rgba(96,165,250,0.4), 0 0 60px rgba(96,165,250,0.15), inset 0 0 20px rgba(96,165,250,0.1);
   background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(60,130,220,0.1));
   text-shadow: 0 0 12px rgba(96,165,250,0.6);
 }
-.galaxy:nth-child(3):hover .galaxy__link {
+.galaxy[data-color="orange"]:hover .galaxy__link {
   border-color: rgba(251,146,60,0.8);
   box-shadow: 0 0 20px rgba(251,146,60,0.4), 0 0 60px rgba(251,146,60,0.15), inset 0 0 20px rgba(251,146,60,0.1);
   background: linear-gradient(135deg, rgba(251,146,60,0.2), rgba(240,120,40,0.1));
@@ -257,7 +321,9 @@ body {
   .galaxy__desc { max-width: 100%; }
   .galaxy__info { display: flex; flex-direction: column; align-items: center; }
   .galaxies { gap: 8rem; padding: 2rem 1.5rem 6rem; }
-  .header__sub { letter-spacing: 0.5em; }
+  .header__sub { letter-spacing: 0.2em; font-size: 0.65rem; }
+  .header__mark { padding: 0.3rem 1rem; margin-bottom: 4rem; }
+  .orbit-ring { width: 140%; }
 }
 @media (max-width: 480px) {
   .galaxy__orbit { width: 280px; height: 190px; }
