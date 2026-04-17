@@ -43,28 +43,29 @@
     vec2 uv=gl_FragCoord.xy/u_r;
     float aspect=u_r.x/u_r.y;
     vec2 uvA=vec2((uv.x-0.5)*aspect,uv.y-0.5); // centered coords
-    float t=u_t*0.015;
+    float t=u_t*0.038;
 
-    // === Eye center — drifts gently ===
-    vec2 center=vec2(0.05*sin(t*0.3),-0.02+0.03*cos(t*0.25));
+    // === Eye center — dramatic drift ===
+    vec2 center=vec2(0.06*sin(t*0.4)+0.025*cos(t*0.75)+0.015*sin(t*1.1),-0.02+0.04*cos(t*0.3)+0.018*sin(t*0.6)+0.01*cos(t*0.95));
     vec2 p=uvA-center;
 
-    // slight tilt — the eye is not perfectly circular, slightly elliptical
-    float tilt=0.15*sin(t*0.1);
+    // heavy breathing tilt — the eye rocks dramatically
+    float tilt=0.38*sin(t*0.22)+0.18*cos(t*0.37)+0.08*sin(t*0.6);
     float cs=cos(tilt),sn=sin(tilt);
     p=vec2(p.x*cs-p.y*sn,p.x*sn+p.y*cs);
-    p.y*=1.15; // slightly squashed vertically like the real Helix
+    float squeeze=1.15+0.12*sin(t*0.26)+0.05*cos(t*0.45); // deep breathing
+    p.y*=squeeze;
 
     float dist=length(p);
     float ang=atan(p.y,p.x);
 
     // === RING GEOMETRY ===
     // The ring radius with organic wobble
-    float ringR=0.22+0.015*sin(ang*3.0+t)+0.01*cos(ang*5.0-t*1.3);
-    ringR+=fbm4(vec2(ang*1.5,t*0.5))*0.025; // organic edge variation
+    float ringR=0.22+0.04*sin(ang*3.0+t*1.8)+0.03*cos(ang*5.0-t*2.2)+0.02*sin(ang*7.0+t*1.3)+0.012*cos(ang*11.0-t*0.7);
+    ringR+=fbm4(vec2(ang*1.5,t*1.2))*0.065; // heavy organic edge
 
     float ringDist=abs(dist-ringR); // distance from ring centerline
-    float ringWidth=0.09+0.02*sin(ang*2.0+t*0.7); // ring thickness varies
+    float ringWidth=0.11+0.045*sin(ang*2.0+t*1.5)+0.025*cos(ang*4.0-t*1.1)+0.015*sin(ang*6.0+t*0.6); // dramatic pulsing
 
     // === RING MASK — bright inner ring ===
     float ringMask=smoothstep(ringWidth,ringWidth*0.15,ringDist);
@@ -75,20 +76,20 @@
     float outerEdge=smoothstep(ringR+ringWidth*2.5,ringR,dist);
 
     // === FILAMENT DETAIL — fine radial tendrils like the real Helix ===
-    vec2 warpP=vec2(ang*3.0+t*0.3,dist*8.0);
-    float filament1=fbm(warpP*2.5+t*0.4);
-    float filament2=fbm(warpP*4.0-t*0.3+vec2(3.7,1.2));
-    float filFine=pow(abs(filament1-0.5)*2.0,0.6);
-    float filCoarse=pow(abs(filament2-0.5)*2.0,0.4);
+    vec2 warpP=vec2(ang*3.0+t*0.8,dist*8.0);
+    float filament1=fbm(warpP*2.5+t*1.1);
+    float filament2=fbm(warpP*4.0-t*0.8+vec2(3.7,1.2));
+    float filFine=pow(abs(filament1-0.5)*2.0,0.4);
+    float filCoarse=pow(abs(filament2-0.5)*2.0,0.28);
 
     // radial streaks emanating from ring — like the Helix tendrils
-    float radialNoise=fbm(vec2(ang*6.0,dist*3.0)+t*0.2);
-    float tendrils=pow(abs(radialNoise-0.5)*2.0,0.3)*smoothstep(0.5,0.25,ringDist);
+    float radialNoise=fbm(vec2(ang*6.0,dist*3.0)+t*0.55);
+    float tendrils=pow(abs(radialNoise-0.5)*2.0,0.2)*smoothstep(0.6,0.15,ringDist);
 
-    // === DOMAIN WARPING for organic structure ===
-    vec2 q=vec2(fbm(uvA*3.0+t*0.5),fbm(uvA*3.0+vec2(5.2,1.3)+t*0.4));
-    vec2 r2=vec2(fbm(uvA*4.0+q+t*0.3),fbm(uvA*4.0+q+vec2(1.7,9.2)+t*0.35));
-    float warp=fbm(uvA*5.0+r2*2.0);
+    // === DOMAIN WARPING — dramatic sweeping currents ===
+    vec2 q=vec2(fbm(uvA*3.0+t*1.2),fbm(uvA*3.0+vec2(5.2,1.3)+t*1.05));
+    vec2 r2=vec2(fbm(uvA*4.0+q+t*0.85),fbm(uvA*4.0+q+vec2(1.7,9.2)+t*0.9));
+    float warp=fbm(uvA*5.0+r2*3.0);
 
     // === COLOR — Helix Nebula palette ===
     vec3 col=vec3(0);
@@ -98,13 +99,13 @@
     vec3 hotOrange=vec3(1.0,0.45,0.05);
     vec3 white=vec3(1.0,0.95,0.85);
     // vary color around the ring
-    float ringZone=ang+t*0.08;
+    float ringZone=ang+t*0.15;
     vec3 ringCol=mix(gold,hotOrange,0.5+0.5*sin(ringZone*1.5));
     ringCol=mix(ringCol,white,filFine*0.3); // bright filaments are whiter
     // brightest at the inner edge of the ring
     float ringBrightness=ringMask*(0.4+0.6*filCoarse)*(0.7+0.3*filFine);
-    ringBrightness+=ringMask*tendrils*0.3;
-    col+=ringCol*ringBrightness*0.4;
+    ringBrightness+=ringMask*tendrils*0.4;
+    col+=ringCol*ringBrightness*0.8;
 
     // 2. OUTER HALO — deep crimson red wisps
     vec3 deepRed=vec3(0.6,0.08,0.02);
@@ -114,13 +115,13 @@
     float haloDetail=fbm(uvA*6.0+q*1.5+t*0.2);
     vec3 haloCol=mix(darkCrimson,deepRed,haloDetail);
     haloCol=mix(haloCol,hotOrange*0.3,outerGlow); // orange tint near ring
-    col+=haloCol*haloMask*(0.2+0.5*haloDetail)*0.3;
+    col+=haloCol*haloMask*(0.2+0.5*haloDetail)*0.45;
 
     // 3. RED TENDRILS — wispy outer filaments
-    float outerTendrils=fbm(vec2(ang*4.0,dist*6.0)+t*0.15);
-    float tendrilMask=smoothstep(0.55,0.22,dist)*smoothstep(0.05,0.15,dist);
-    tendrilMask*=pow(abs(outerTendrils-0.5)*2.0,0.5)*0.3;
-    col+=vec3(0.5,0.06,0.02)*tendrilMask;
+    float outerTendrils=fbm(vec2(ang*4.0,dist*6.0)+t*0.5);
+    float tendrilMask=smoothstep(0.55,0.14,dist)*smoothstep(0.03,0.1,dist);
+    tendrilMask*=pow(abs(outerTendrils-0.5)*2.0,0.3)*0.6;
+    col+=vec3(0.7,0.1,0.04)*tendrilMask;
 
     // 4. DARK CENTER — the eye's dark blue pupil
     float centerDark=smoothstep(ringR-ringWidth*0.5,ringR-ringWidth*1.5,dist);
@@ -129,12 +130,12 @@
     col=mix(col,centerCol,centerDark*0.7);
 
     // 5. BRIGHT KNOTS along the ring — clumpy detail
-    float knots=pow(fbm(vec2(ang*8.0,dist*12.0)+t*0.25),2.0);
-    col+=vec3(1.0,0.8,0.3)*knots*ringMask*0.2;
+    float knots=pow(fbm(vec2(ang*8.0,dist*12.0)+t*0.65),1.5);
+    col+=vec3(1.0,0.8,0.3)*knots*ringMask*0.45;
 
-    // 6. subtle overall outer glow — very faint reddish
-    float farGlow=smoothstep(0.7,0.2,dist)*0.04;
-    col+=vec3(0.3,0.03,0.01)*farGlow;
+    // 6. outer glow — reddish, expansive
+    float farGlow=smoothstep(0.65,0.12,dist)*0.06;
+    col+=vec3(0.35,0.04,0.015)*farGlow;
 
     // final output — keep as overlay (mix-blend-mode: screen in CSS)
     col=clamp(col,0.0,1.0);
@@ -291,7 +292,7 @@
 
   // === SHOOTING STARS — realistic meteors ===
   const shooters=[];
-  let shootNext=60+Math.random()*180; // frames until next shooting star
+  let shootNext=50+Math.random()*140; // frames until next shooting star
   let shootFrame=0;
 
   function spawnShooter(){
@@ -324,22 +325,47 @@
       if(s.age>=s.maxLife||s.y>c.height+50||s.x>c.width+50){
         shooters.splice(i,1);continue;
       }
-      // draw tail — gradient from bright head to transparent tail
-      const tailX=s.x-s.vx/Math.hypot(s.vx,s.vy)*s.len;
-      const tailY=s.y-s.vy/Math.hypot(s.vx,s.vy)*s.len;
-      const grad=ctx.createLinearGradient(s.x,s.y,tailX,tailY);
+      const dir=Math.hypot(s.vx,s.vy);
+      const nx=s.vx/dir,ny=s.vy/dir;
       const a=s.life*s.brightness;
-      grad.addColorStop(0,`rgba(${s.r|0},${s.g|0},${s.b|0},${a})`);
-      grad.addColorStop(0.3,`rgba(${s.r|0},${s.g|0},${s.b|0},${a*0.4})`);
-      grad.addColorStop(1,'rgba(255,255,255,0)');
+
+      // outer diffuse trail — wide, faint
+      const outerTailX=s.x-nx*s.len*1.15;
+      const outerTailY=s.y-ny*s.len*1.15;
+      const outerGrad=ctx.createLinearGradient(s.x,s.y,outerTailX,outerTailY);
+      outerGrad.addColorStop(0,`rgba(${s.r|0},${s.g|0},${s.b|0},${a*0.15})`);
+      outerGrad.addColorStop(0.4,`rgba(${s.r|0},${s.g|0},${s.b|0},${a*0.06})`);
+      outerGrad.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.strokeStyle=outerGrad;
+      ctx.lineWidth=s.width*4;
+      ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(outerTailX,outerTailY);ctx.stroke();
+
+      // main tail — core gradient
+      const tailX=s.x-nx*s.len;
+      const tailY=s.y-ny*s.len;
+      const grad=ctx.createLinearGradient(s.x,s.y,tailX,tailY);
+      grad.addColorStop(0,`rgba(255,255,255,${a})`);
+      grad.addColorStop(0.08,`rgba(${s.r|0},${s.g|0},${s.b|0},${a*0.85})`);
+      grad.addColorStop(0.3,`rgba(${s.r|0},${s.g|0},${s.b|0},${a*0.35})`);
+      grad.addColorStop(0.6,`rgba(${s.r|0},${(s.g*0.6)|0},${(s.b*0.7)|0},${a*0.12})`);
+      grad.addColorStop(1,'rgba(0,0,0,0)');
       ctx.strokeStyle=grad;
       ctx.lineWidth=s.width;
-      ctx.lineCap='round';
       ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(tailX,tailY);ctx.stroke();
-      // bright head glow
+
+      // inner bright core line — thin white
+      const coreLen=s.len*0.4;
+      ctx.strokeStyle=`rgba(255,255,255,${a*0.7})`;
+      ctx.lineWidth=s.width*0.4;
+      ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-nx*coreLen,s.y-ny*coreLen);ctx.stroke();
+
+      // bright head glow — layered
       ctx.globalCompositeOperation='lighter';
-      ctx.beginPath();ctx.arc(s.x,s.y,s.width*2,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${a*0.3})`;ctx.fill();
+      ctx.beginPath();ctx.arc(s.x,s.y,s.width*3.5,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${s.r|0},${s.g|0},${s.b|0},${a*0.12})`;ctx.fill();
+      ctx.beginPath();ctx.arc(s.x,s.y,s.width*1.5,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${a*0.4})`;ctx.fill();
       ctx.globalCompositeOperation='source-over';
     }
   }
@@ -433,7 +459,7 @@
     if(shootFrame>=shootNext){
       spawnShooter();
       shootFrame=0;
-      shootNext=90+Math.random()*300; // 1.5–6.5 seconds between meteors
+      shootNext=70+Math.random()*230; // 1.2–5 seconds between meteors
     }
     drawShooters();
 
@@ -465,8 +491,9 @@ function createGalaxy(canvas,theme,section){
   section.addEventListener('mouseenter',()=>{isHov=true;});
   section.addEventListener('mouseleave',()=>{isHov=false;});
 
-  // lightning state — beautiful but less frequent
-  let lTimer=0,lFlash=0,lPos=[0,0],lBranches=[],lNext=40+Math.floor(Math.random()*80);
+  // lightning state — bursts of 1-3
+  let lTimer=0,lFlash=0,lPos=[0,0],lBranches=[],lNext=25+Math.floor(Math.random()*60);
+  let lBurst=0; // remaining strikes in current burst
   function triggerL(){
     const ang=Math.random()*Math.PI*2,dist=0.15+Math.random()*0.5;
     const[lx,ly]=proj(dist,ang,0);lPos=[lx,ly];lFlash=1.0;
@@ -487,16 +514,16 @@ function createGalaxy(canvas,theme,section){
 
   // NEBULA CLOUDS — large glowing regions within the galaxy
   const nebClouds=[];
-  for(let i=0;i<40;i++){
+  for(let i=0;i<70;i++){
     const arm=i%4,armA=(arm/4)*Math.PI*2;
-    const dist=0.05+Math.random()*0.85;
-    const spiral=armA+dist*5.0+(Math.random()-0.5)*0.7;
+    const dist=0.03+Math.random()*0.88;
+    const spiral=armA+dist*5.0+(Math.random()-0.5)*0.6;
     const whichNeb=Math.floor(Math.random()*3);
     const nebCol=whichNeb===0?T.neb1:whichNeb===1?T.neb2:T.neb3;
     nebClouds.push({
       dist,angle:spiral,
-      sizeX:25+Math.random()*65,sizeY:10+Math.random()*30,
-      baseOp:0.02+Math.random()*0.04,
+      sizeX:30+Math.random()*75,sizeY:12+Math.random()*35,
+      baseOp:0.03+Math.random()*0.055,
       nebCol,
       pulseSpd:0.002+Math.random()*0.006,pulsePh:Math.random()*Math.PI*2,
       orbSpd:0.00005*(1+0.3/(dist+0.1)),
@@ -506,37 +533,37 @@ function createGalaxy(canvas,theme,section){
   const dustLane=[],dustBack=[],bgStars=[],midStars=[],brightStars=[];
   const cloudsFront=[],rays=[],hotspots=[];
 
-  // dust lane 25
-  for(let i=0;i<25;i++){const dist=0.1+Math.random()*0.75;
-    dustLane.push({dist,angle:Math.random()*Math.PI*2,sizeX:30+Math.random()*60,sizeY:3+Math.random()*8,opacity:0.04+Math.random()*0.06,orbSpd:0.00005*(1+0.3/(dist+0.1))});}
-  // dust back 50
-  for(let i=0;i<50;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=0.05+Math.random()*0.9;
-    dustBack.push({dist,angle:armA+dist*5.0+(Math.random()-0.5)*0.8,size:18+Math.random()*55,opacity:0.012+Math.random()*0.025,colorMix:Math.random(),pulseSpd:0.003+Math.random()*0.007,pulsePh:Math.random()*Math.PI*2,orbSpd:0.00006*(1+0.3/(dist+0.1))});}
-  // bg stars 5000
-  for(let i=0;i<5000;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=Math.pow(Math.random(),0.45)*0.95;
-    const spiral=armA+dist*5.0+(Math.random()-0.5)*(1.0-dist*0.5);
+  // dust lane 35
+  for(let i=0;i<35;i++){const dist=0.08+Math.random()*0.8;
+    dustLane.push({dist,angle:Math.random()*Math.PI*2,sizeX:30+Math.random()*65,sizeY:3+Math.random()*10,opacity:0.05+Math.random()*0.07,orbSpd:0.00005*(1+0.3/(dist+0.1))});}
+  // dust back 85
+  for(let i=0;i<85;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=0.03+Math.random()*0.92;
+    dustBack.push({dist,angle:armA+dist*5.0+(Math.random()-0.5)*0.7,size:22+Math.random()*65,opacity:0.018+Math.random()*0.035,colorMix:Math.random(),pulseSpd:0.003+Math.random()*0.007,pulsePh:Math.random()*Math.PI*2,orbSpd:0.00006*(1+0.3/(dist+0.1))});}
+  // bg stars 8000
+  for(let i=0;i<8000;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=Math.pow(Math.random(),0.42)*0.96;
+    const spiral=armA+dist*5.0+(Math.random()-0.5)*(0.85-dist*0.4);
     const zOff=(Math.random()-0.5)*(1-dist*0.5)*0.11;
     const t=dist;let c=t<0.08?T.core:t<0.2?T.bright:t<0.5?T.mid:T.dark;
-    bgStars.push({dist,angle:spiral,zOff,r:0.2+Math.random()*0.6,c,alpha:0.2+Math.random()*0.5});}
-  // mid stars 1500
-  for(let i=0;i<1500;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=Math.pow(Math.random(),0.5)*0.9;
-    const spiral=armA+dist*4.8+(Math.random()-0.5)*0.7;
+    bgStars.push({dist,angle:spiral,zOff,r:0.2+Math.random()*0.7,c,alpha:0.25+Math.random()*0.55});}
+  // mid stars 2500
+  for(let i=0;i<2500;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=Math.pow(Math.random(),0.48)*0.92;
+    const spiral=armA+dist*4.8+(Math.random()-0.5)*0.6;
     const zOff=(Math.random()-0.5)*(1-dist*0.4)*0.1;
     const t=dist;let c=t<0.12?T.core:t<0.35?T.bright:T.mid;
-    midStars.push({dist,angle:spiral,zOff,r:0.4+Math.random()*1.0,c,baseA:0.35+Math.random()*0.5,twSpd:0.005+Math.random()*0.018,twPh:Math.random()*Math.PI*2,orbSpd:0.00012*(1+0.2/(dist+0.1))});}
-  // bright 180
-  for(let i=0;i<180;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=Math.pow(Math.random(),0.55)*0.8;
-    const spiral=armA+dist*4.5+(Math.random()-0.5)*0.5;const zOff=(Math.random()-0.5)*0.05;
+    midStars.push({dist,angle:spiral,zOff,r:0.4+Math.random()*1.1,c,baseA:0.4+Math.random()*0.5,twSpd:0.005+Math.random()*0.018,twPh:Math.random()*Math.PI*2,orbSpd:0.00012*(1+0.2/(dist+0.1))});}
+  // bright 300
+  for(let i=0;i<300;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=Math.pow(Math.random(),0.5)*0.85;
+    const spiral=armA+dist*4.5+(Math.random()-0.5)*0.45;const zOff=(Math.random()-0.5)*0.05;
     let c=dist<0.15?T.core:T.bright;
-    brightStars.push({dist,angle:spiral,zOff,r:1.0+Math.random()*2.2,c,baseA:0.6+Math.random()*0.4,twSpd:0.007+Math.random()*0.02,twPh:Math.random()*Math.PI*2,orbSpd:0.00018*(1+0.2/(dist+0.1)),halo:5+Math.random()*14});}
-  // cloud puffs 35
-  for(let i=0;i<35;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=0.05+Math.random()*0.75;
-    cloudsFront.push({dist,angle:armA+dist*5.0+(Math.random()-0.5)*0.6,sizeX:20+Math.random()*50,sizeY:8+Math.random()*20,opacity:0.015+Math.random()*0.03,pulseSpd:0.003+Math.random()*0.008,pulsePh:Math.random()*Math.PI*2,orbSpd:0.00007*(1+0.2/(dist+0.1))});}
-  // rays 20
-  for(let i=0;i<20;i++){rays.push({angle:(i/20)*Math.PI*2+(Math.random()-0.5)*0.3,length:50+Math.random()*160,width:1+Math.random()*4,pulseSpd:0.004+Math.random()*0.01,pulsePh:Math.random()*Math.PI*2,rotSpd:0.00008+Math.random()*0.00015});}
-  // hotspots 20
-  for(let i=0;i<20;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=0.12+Math.random()*0.6;
-    hotspots.push({dist,angle:armA+dist*4.5+(Math.random()-0.5)*0.3,radius:5+Math.random()*15,pulseSpd:0.005+Math.random()*0.012,pulsePh:Math.random()*Math.PI*2,orbSpd:0.0001*(1+0.2/(dist+0.1))});}
+    brightStars.push({dist,angle:spiral,zOff,r:1.0+Math.random()*2.4,c,baseA:0.6+Math.random()*0.4,twSpd:0.007+Math.random()*0.02,twPh:Math.random()*Math.PI*2,orbSpd:0.00018*(1+0.2/(dist+0.1)),halo:5+Math.random()*16});}
+  // cloud puffs 55
+  for(let i=0;i<55;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=0.03+Math.random()*0.8;
+    cloudsFront.push({dist,angle:armA+dist*5.0+(Math.random()-0.5)*0.55,sizeX:22+Math.random()*55,sizeY:9+Math.random()*24,opacity:0.02+Math.random()*0.04,pulseSpd:0.003+Math.random()*0.008,pulsePh:Math.random()*Math.PI*2,orbSpd:0.00007*(1+0.2/(dist+0.1))});}
+  // rays 28
+  for(let i=0;i<28;i++){rays.push({angle:(i/28)*Math.PI*2+(Math.random()-0.5)*0.3,length:55+Math.random()*180,width:1+Math.random()*4.5,pulseSpd:0.004+Math.random()*0.01,pulsePh:Math.random()*Math.PI*2,rotSpd:0.00008+Math.random()*0.00015});}
+  // hotspots 30
+  for(let i=0;i<30;i++){const arm=i%4,armA=(arm/4)*Math.PI*2,dist=0.08+Math.random()*0.65;
+    hotspots.push({dist,angle:armA+dist*4.5+(Math.random()-0.5)*0.3,radius:6+Math.random()*18,pulseSpd:0.005+Math.random()*0.012,pulsePh:Math.random()*Math.PI*2,orbSpd:0.0001*(1+0.2/(dist+0.1))});}
 
   let time=Math.random()*10000;
   const rot={a:0,spd:0.00025};
@@ -550,10 +577,18 @@ function createGalaxy(canvas,theme,section){
     const tgtSpd=isHov?0.0012:0.00025; // slightly less than before
     rot.spd+=(tgtSpd-rot.spd)*0.03;rot.a+=rot.spd;
 
-    // lightning — random organic timing (not systematic)
+    // lightning — bursts of 1-3 strikes
     if(isHov){lTimer++;
-      if(lTimer>lNext){lTimer=0;lNext=30+Math.floor(Math.random()*120);triggerL();}
-    }else{lTimer=0;}
+      if(lBurst>0&&lFlash<0.3){
+        // fire next strike in burst
+        lBurst--;triggerL();lTimer=0;
+      } else if(lBurst===0&&lTimer>lNext){
+        // start new burst
+        lBurst=Math.random()<0.4?0:Math.random()<0.6?1:2; // 40% single, 36% double, 24% triple
+        triggerL();lTimer=0;
+        lNext=20+Math.floor(Math.random()*70);
+      }
+    }else{lTimer=0;lBurst=0;}
     if(lFlash>0)lFlash*=0.88;
 
     ctx.clearRect(0,0,W,H);
@@ -567,22 +602,23 @@ function createGalaxy(canvas,theme,section){
       fg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=fg;ctx.fillRect(0,0,W,H);
     }
 
-    /* CORE GLOW */
+    /* CORE GLOW — volumetric depth */
     ctx.save();ctx.translate(cx,cy);ctx.scale(1,TILT);
-    let g=ctx.createRadialGradient(0,0,0,0,0,RX*0.7);
-    g.addColorStop(0,`rgba(${T.dark[0]},${T.dark[1]},${T.dark[2]},${0.03*cp})`);
-    g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.7,0,Math.PI*2);ctx.fill();
-    g=ctx.createRadialGradient(0,0,0,0,0,RX*0.35);
-    g.addColorStop(0,`rgba(${T.glow[0]},${T.glow[1]},${T.glow[2]},${0.12*cp})`);
-    g.addColorStop(0.5,`rgba(${T.mid[0]},${T.mid[1]},${T.mid[2]},${0.04*cp})`);
-    g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.35,0,Math.PI*2);ctx.fill();
-    g=ctx.createRadialGradient(0,0,0,0,0,RX*0.12);
-    g.addColorStop(0,`rgba(${T.core[0]},${T.core[1]},${T.core[2]},${0.5*cp})`);
-    g.addColorStop(0.5,`rgba(${T.bright[0]},${T.bright[1]},${T.bright[2]},${0.18*cp})`);
-    g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.12,0,Math.PI*2);ctx.fill();
-    g=ctx.createRadialGradient(0,0,0,0,0,RX*0.04);
-    g.addColorStop(0,`rgba(255,255,255,${0.4*cp})`);g.addColorStop(1,`rgba(${T.core[0]},${T.core[1]},${T.core[2]},0)`);
-    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.04,0,Math.PI*2);ctx.fill();
+    let g=ctx.createRadialGradient(0,0,0,0,0,RX*0.8);
+    g.addColorStop(0,`rgba(${T.dark[0]},${T.dark[1]},${T.dark[2]},${0.05*cp})`);
+    g.addColorStop(0.5,`rgba(${T.dark[0]},${T.dark[1]},${T.dark[2]},${0.02*cp})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.8,0,Math.PI*2);ctx.fill();
+    g=ctx.createRadialGradient(0,0,0,0,0,RX*0.45);
+    g.addColorStop(0,`rgba(${T.glow[0]},${T.glow[1]},${T.glow[2]},${0.16*cp})`);
+    g.addColorStop(0.4,`rgba(${T.mid[0]},${T.mid[1]},${T.mid[2]},${0.06*cp})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.45,0,Math.PI*2);ctx.fill();
+    g=ctx.createRadialGradient(0,0,0,0,0,RX*0.15);
+    g.addColorStop(0,`rgba(${T.core[0]},${T.core[1]},${T.core[2]},${0.6*cp})`);
+    g.addColorStop(0.4,`rgba(${T.bright[0]},${T.bright[1]},${T.bright[2]},${0.25*cp})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.15,0,Math.PI*2);ctx.fill();
+    g=ctx.createRadialGradient(0,0,0,0,0,RX*0.05);
+    g.addColorStop(0,`rgba(255,255,255,${0.5*cp})`);g.addColorStop(1,`rgba(${T.core[0]},${T.core[1]},${T.core[2]},0)`);
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,RX*0.05,0,Math.PI*2);ctx.fill();
     ctx.restore();
 
     ctx.globalCompositeOperation='lighter';
@@ -738,10 +774,13 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
 /* ===== 9. TEXT BLACK HOLE SUCTION ===== */
 (function initTextSuction(){
   // split text into individual letter spans
-  const targets=document.querySelectorAll('.header__name,.header__sub,.header__tagline,.galaxy__name,.galaxy__desc,.galaxy__link,.footer p,.scroll-hint__text');
+  const targets=document.querySelectorAll('.header__sub,.header__tagline,.galaxy__name,.galaxy__desc,.galaxy__link,.footer p,.scroll-hint__text');
   const allLetters=[];
   targets.forEach(el=>{
     const text=el.textContent;
+    // detect if parent uses background-clip:text (gradient text)
+    const cs=getComputedStyle(el);
+    const isGradientText=(cs.webkitTextFillColor==='transparent'||cs.webkitTextFillColor==='rgba(0, 0, 0, 0)');
     el.textContent='';
     for(let i=0;i<text.length;i++){
       const ch=text[i];
@@ -757,6 +796,7 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
       span._vx=0;span._vy=0; // velocity
       span._sucked=false;
       span._isSpace=(ch===' ');
+      span._gradientText=isGradientText;
       el.appendChild(span);
       if(!span._isSpace) allLetters.push(span);
     }
@@ -790,6 +830,10 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
       for(const sp of allLetters){
         sp._ox=0;sp._oy=0;sp._vx=0;sp._vy=0;sp._sucked=false;
         sp.style.transform='';sp.style.opacity='';
+        if(sp._gradientText){
+          sp.style.webkitTextFillColor='';sp.style.backgroundClip='';
+          sp.style.webkitBackgroundClip='';sp.style.background='';
+        }
       }
     }
 
@@ -808,6 +852,13 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
             sp._orbiting=false;
             sp._orbAngle=Math.atan2(dy,dx)+Math.PI; // angle from BH
             sp._orbR=homeDist; // start orbit at current distance
+            // gradient-text letters: switch to solid white so they're visible when moving
+            if(sp._gradientText){
+              sp.style.webkitTextFillColor='#fff';
+              sp.style.backgroundClip='unset';
+              sp.style.webkitBackgroundClip='unset';
+              sp.style.background='none';
+            }
           }
 
           if(!sp._orbiting){
@@ -865,12 +916,21 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
             sp._ox=0;sp._oy=0;sp._vx=0;sp._vy=0;
             sp._sucked=false;sp._orbiting=false;
             sp.style.transform='';sp.style.opacity='';
+            if(sp._gradientText){
+              sp.style.webkitTextFillColor='';sp.style.backgroundClip='';
+              sp.style.webkitBackgroundClip='';sp.style.background='';
+            }
             continue;
           }
         }
 
-        const totalDist=Math.hypot(sp._ox,sp._oy);
         const speed=Math.hypot(sp._vx,sp._vy);
+
+        // distance from letter's CURRENT position to BH center
+        const rect2=sp.getBoundingClientRect();
+        const curCx2=rect2.left+rect2.width/2;
+        const curCy2=rect2.top+rect2.height/2;
+        const distToBH2=Math.hypot(bmx-curCx2,bmy-curCy2);
 
         if(sp._orbiting){
           // orbiting letters: small, semi-transparent, spinning
@@ -878,19 +938,164 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
           sp.style.transform=`translate(${sp._ox}px,${sp._oy}px) rotate(${spin.toFixed(0)}deg) scale(0.3)`;
           sp.style.opacity='0.4';
         } else {
-          // suction phase: stretch toward BH
-          const scale=Math.max(1-totalDist*0.003,0.1);
-          const opacity=Math.max(1-totalDist*0.005,0);
+          // suction phase: stretch toward BH, fade/shrink based on closeness TO the BH
+          const proximity=Math.max(1-distToBH2/SUCK_R,0); // 0=far, 1=at center
+          const scale=Math.max(1-proximity*0.7,0.2); // shrink as it nears BH
+          const opacity=Math.max(1-proximity*0.6,0.15); // stay visible until close
           const angle=Math.atan2(sp._oy,sp._ox);
-          const stretch=1+Math.min(speed*0.4+totalDist*0.008,3.0);
+          const stretch=1+Math.min(speed*0.4+proximity*2.5,3.0);
           const squash=1/Math.max(Math.sqrt(stretch),1);
           const aDeg=angle*180/Math.PI;
           sp.style.transform=`translate(${sp._ox}px,${sp._oy}px) rotate(${aDeg}deg) scaleX(${stretch.toFixed(2)}) scaleY(${squash.toFixed(2)}) rotate(${-aDeg}deg) scale(${scale.toFixed(2)})`;
-          sp.style.opacity=opacity<0.01?'0':opacity.toFixed(2);
+          sp.style.opacity=opacity.toFixed(2);
         }
       }
     }
     requestAnimationFrame(tick);
   }
   tick();
+})();
+
+
+/* ===== 10. FLOATING ASTRONAUT — 3D GLB model via <model-viewer> ===== */
+(function initAstronaut3D(){
+  const mv=document.getElementById('astronaut-3d');
+  if(!mv) return;
+
+  let t=Math.random()*10000;
+
+  // Scroll physics
+  let prevScrollY=0,scrollPush=0,scrollPushVel=0;
+  addEventListener('scroll',()=>{
+    const nv=scrollY-prevScrollY;
+    prevScrollY=scrollY;
+    scrollPushVel+=nv*2.5;
+  });
+
+  // Waypoint system — astronaut drifts between random screen positions
+  function randomPos(){
+    return {
+      x: (Math.random()-0.5)*innerWidth*0.6,
+      y: (Math.random()-0.5)*innerHeight*0.5
+    };
+  }
+  let wp=randomPos(), nextWp=randomPos();
+  let wpT=0, wpDur=12+Math.random()*8; // 12-20 seconds per waypoint
+
+  let curX=wp.x, curY=wp.y;
+
+  // Thought bubble
+  const thoughts=[
+    "I left the oven on...",
+    "Houston, I need coffee",
+    "Is that a star or a pixel?",
+    "Gravity is overrated",
+    "404: Earth not found",
+    "Do aliens have LinkedIn?",
+    "Floating is my cardio",
+    "Plot twist: I'm the UFO",
+    "Ctrl+Z my launch",
+    "WiFi signal: 0 bars",
+    "Dear diary: still floating",
+    "My rent is still due up here",
+    "Technically I'm falling forever",
+    "Note to self: pack more snacks",
+    "Is it Monday on Earth?",
+    "Who is this Ross guy anyway?",
+    "Why am I guarding his portfolio?",
+    "He builds sites, I float. Fair deal",
+    "This site has more effects than NASA",
+    "Ross made me. I didn't ask for this",
+    "3 projects? Rookie numbers, Ross",
+    "Why are there letters floating in space?",
+    "These galaxies are just links. I checked",
+    "I get no salary for this",
+    "At least his CSS is clean"
+  ];
+  let thoughtOrder=thoughts.map((_,i)=>i);
+  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*i+1|0;[a[i],a[j]]=[a[j],a[i]];}}
+  shuffle(thoughtOrder);
+  let thoughtIdx=0;
+
+  const bubble=document.createElement('div');
+  bubble.className='astro-thought';
+  document.body.appendChild(bubble);
+
+  let bubbleTimer=3+Math.random()*3; // first thought in 3-6s
+  let bubbleVisible=false;
+  let bubbleShowTime=0;
+  const BUBBLE_DURATION=3;
+  const BUBBLE_PAUSE_MIN=4;
+  const BUBBLE_PAUSE_MAX=9;
+
+  function animate(){
+    t+=0.016;
+
+    scrollPush+=scrollPushVel*0.3;
+    scrollPushVel*=0.85;
+    scrollPush*=0.97;
+
+    // Waypoint drift — smooth travel between positions
+    wpT+=0.016;
+    if(wpT>=wpDur){
+      wp=nextWp;
+      nextWp=randomPos();
+      wpT=0;
+      wpDur=12+Math.random()*8;
+    }
+    const progress=wpT/wpDur;
+    // Smooth ease in-out
+    const ease=progress<0.5 ? 2*progress*progress : 1-Math.pow(-2*progress+2,2)/2;
+    const baseX=wp.x+(nextWp.x-wp.x)*ease;
+    const baseY=wp.y+(nextWp.y-wp.y)*ease;
+
+    // Add Lissajous micro-drift on top
+    const driftX=Math.sin(t*0.055)*innerWidth*0.04+Math.cos(t*0.025)*innerWidth*0.02;
+    const driftY=Math.sin(t*0.04+0.5)*innerHeight*0.03+Math.cos(t*0.02)*innerHeight*0.015;
+
+    const targetX=baseX+driftX;
+    const targetY=baseY+driftY-scrollPush;
+    curX+=(targetX-curX)*0.015;
+    curY+=(targetY-curY)*0.015;
+
+    // Camera orbit
+    const theta=(t*8)%360+Math.sin(t*0.07)*25;
+    const phi=75+Math.sin(t*0.04)*35+Math.sin(t*0.09)*12;
+    const dist=600+Math.sin(t*0.06)*20;
+    mv.cameraOrbit=theta+'deg '+phi+'deg '+dist+'m';
+
+    // Tumble
+    const tiltX=Math.sin(t*0.05)*15+Math.sin(t*0.11)*6;
+    const tiltY=Math.sin(t*0.04+0.7)*18+Math.sin(t*0.09+2)*8;
+    const tiltZ=Math.sin(t*0.035+1)*14+Math.sin(t*0.08)*5;
+    mv.style.transform='translate('+curX+'px,'+curY+'px) rotateX('+tiltX+'deg) rotateY('+tiltY+'deg) rotateZ('+tiltZ+'deg)';
+
+    // Thought bubble position — follows astronaut, offset up-right
+    const screenX=innerWidth/2+curX;
+    const screenY=innerHeight/2+curY;
+    bubble.style.left=(screenX+35)+'px';
+    bubble.style.top=(screenY-55)+'px';
+
+    // Thought bubble timing
+    bubbleTimer-=0.016;
+    if(!bubbleVisible && bubbleTimer<=0){
+      bubble.textContent=thoughts[thoughtOrder[thoughtIdx]];
+      thoughtIdx++;
+      if(thoughtIdx>=thoughtOrder.length){thoughtIdx=0;shuffle(thoughtOrder);}
+      bubble.classList.add('visible');
+      bubbleVisible=true;
+      bubbleShowTime=BUBBLE_DURATION;
+    }
+    if(bubbleVisible){
+      bubbleShowTime-=0.016;
+      if(bubbleShowTime<=0){
+        bubble.classList.remove('visible');
+        bubbleVisible=false;
+        bubbleTimer=BUBBLE_PAUSE_MIN+Math.random()*(BUBBLE_PAUSE_MAX-BUBBLE_PAUSE_MIN);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+  animate();
 })();

@@ -45,6 +45,48 @@ body {
   pointer-events: none;
 }
 
+/* ===== ASTRONAUT 3D MODEL ===== */
+#astronaut-3d {
+  --poster-color: transparent;
+}
+#astronaut-3d::part(default-progress-bar) { display: none; }
+
+/* ===== ASTRONAUT THOUGHT BUBBLE ===== */
+.astro-thought {
+  position: fixed; z-index: 11;
+  pointer-events: none;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.8rem; font-weight: 400;
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  max-width: 220px;
+  white-space: normal;
+  word-wrap: break-word;
+  opacity: 0;
+  transform: translateY(6px) scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.astro-thought.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.astro-thought::before {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: 16px;
+  width: 10px; height: 10px;
+  background: rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255,255,255,0.15);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  transform: rotate(45deg);
+  backdrop-filter: blur(8px);
+}
+
 /* ===== HEADER ===== */
 .header {
   position: relative; z-index: 2;
