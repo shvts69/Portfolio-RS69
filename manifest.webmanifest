@@ -1,0 +1,14 @@
+{
+  "name": "RS69 — Rogue Signal 69",
+  "short_name": "RS69",
+  "description": "Creative developer studio by Ross Shvts. Sites that move, react, glitch, and occasionally talk back.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0a0014",
+  "background_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
