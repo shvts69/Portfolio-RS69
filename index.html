@@ -1,15 +1,97 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RS69 — Rogue Signal 69</title>
-  <link rel="stylesheet" href="styles.min.css?v=51">
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <title>RS69 — Rogue Signal 69 | Creative Developer Studio</title>
+  <meta name="description" content="RS69 — Rogue Signal 69. Creative developer studio by Ross Shvts. Frontend sites that move, react, and occasionally talk back.">
+  <meta name="author" content="Ross Shvts">
+  <meta name="keywords" content="Ross Shvts, RS69, Rogue Signal 69, creative developer, frontend portfolio, WebGL, Canvas, interactive website, freelance developer, US-based developer">
+  <meta name="robots" content="index, follow">
+  <meta name="google-site-verification" content="E5OciFdbTE52Xx2Myp402Dx5HrtEGM8nEkMMD6z8DdU">
+  <link rel="canonical" href="https://rs69.dev/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rs69.dev/">
+  <meta property="og:site_name" content="RS69">
+  <meta property="og:title" content="RS69 — Rogue Signal 69">
+  <meta property="og:description" content="Creative developer studio by Ross Shvts. Sites that move, react, glitch, and occasionally talk back.">
+  <meta property="og:image" content="https://rs69.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RS69 — Rogue Signal 69">
+  <meta name="twitter:description" content="Creative developer studio by Ross Shvts. Sites that move, react, glitch, and occasionally talk back.">
+  <meta name="twitter:image" content="https://rs69.dev/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ross Shvts",
+    "alternateName": "RS69",
+    "url": "https://rs69.dev/",
+    "image": "https://rs69.dev/og-image.png",
+    "jobTitle": "Creative Frontend Developer",
+    "description": "Creative developer building interactive sites with WebGL, Canvas, and custom animation systems.",
+    "email": "mailto:shvts69@gmail.com",
+    "sameAs": [
+      "https://github.com/shvts69"
+    ],
+    "knowsAbout": ["WebGL", "Canvas 2D", "Next.js", "Supabase", "Frontend animation", "Interactive web design"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.min.css?v=85">
+  <script>if(!matchMedia('(pointer: coarse)').matches){const s=document.createElement('script');s.type='module';s.src='https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';document.head.appendChild(s);}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Preloader -->
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="preloader__content">
+      <div class="preloader__ascii-wrap">
+<pre class="preloader__ascii preloader__ascii--base" aria-hidden="true">██████╗ ███████╗ ██████╗  █████╗
+██╔══██╗██╔════╝██╔════╝ ██╔══██╗
+██████╔╝███████╗███████╗ ╚██████║
+██╔══██╗╚════██║██╔═══██╗ ╚═══██║
+██║  ██║███████║╚██████╔╝ █████╔╝
+╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚════╝ </pre>
+<pre class="preloader__ascii preloader__ascii--fill" id="preloader-fill" aria-hidden="true">██████╗ ███████╗ ██████╗  █████╗
+██╔══██╗██╔════╝██╔════╝ ██╔══██╗
+██████╔╝███████╗███████╗ ╚██████║
+██╔══██╗╚════██║██╔═══██╗ ╚═══██║
+██║  ██║███████║╚██████╔╝ █████╔╝
+╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚════╝ </pre>
+      </div>
+      <div class="preloader__status" id="preloader-status">Booting rogue signal</div>
+    </div>
+  </div>
+
+  <!-- Custom cursor (desktop only) -->
+  <div id="cursor" class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
+
+  <!-- Sound toggle -->
+  <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound" aria-pressed="false">
+    <svg class="sound-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path class="sound-toggle__wave sound-toggle__wave--body" d="M4 10v4h4l5 4V6l-5 4H4z"/>
+      <path class="sound-toggle__wave sound-toggle__wave--a" d="M16 8.5c1.2 1 1.2 6 0 7"/>
+      <path class="sound-toggle__wave sound-toggle__wave--b" d="M19 5.5c3 2.5 3 11 0 13.5"/>
+      <line class="sound-toggle__slash" x1="3" y1="3" x2="21" y2="21"/>
+    </svg>
+  </button>
+
+  <!-- Absorbed counter -->
+  <div class="abs-counter" aria-live="polite">
+    <span class="abs-counter__dot"></span>
+    <span class="abs-counter__label">Astronauts absorbed</span>
+    <span class="abs-counter__n" id="abs-counter-n">0</span>
+  </div>
   <!-- Background: HD image + WebGL living light overlay -->
   <div class="space-bg"></div>
   <canvas id="nebula-canvas"></canvas>
@@ -61,48 +143,163 @@
     </div>
   </header>
 
+  <section class="about" id="main">
+    <div class="about__portrait reveal">
+      <div class="about__portrait-frame">
+        <picture>
+          <source srcset="assets/me/portrait.webp" type="image/webp">
+          <img src="assets/me/portrait.jpg" alt="Ross Shvts — portrait" loading="lazy" width="280" height="373">
+        </picture>
+      </div>
+      <p class="about__portrait-label">Signal origin &mdash; identity withheld</p>
+    </div>
+    <p class="about__lead reveal">Somewhere between a keyboard and a nebula, I build things on the web.</p>
+    <p class="about__line reveal reveal--delay-1">Sites that move, react, glitch, and occasionally talk back.</p>
+    <p class="about__line reveal reveal--delay-2">I don't have a CS degree. I have stubbornness, Stack Overflow, 4 AM coffee, and an astronaut who doesn't let me get bored.</p>
+    <p class="about__line reveal reveal--delay-3">I'm Ross — a frontend developer who treats every site as a visual problem first, and code second.</p>
+    <p class="about__cta reveal">If your site needs to move, feel strange, tell a story, or punch above its weight.</p>
+    <p class="about__connect reveal">Let's connect</p>
+    <div class="about__contacts reveal reveal--delay-1">
+      <a href="mailto:shvts69@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="m3 7 9 6 9-6"/>
+        </svg>
+      </a>
+      <a href="https://t.me/shv_ts" target="_blank" rel="noopener" aria-label="Telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+        </svg>
+      </a>
+      <a href="https://github.com/shvts69" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.31-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
   <main class="galaxies">
-    <section class="galaxy" data-url="https://rock-band-site.vercel.app" data-color="orange">
+    <header class="galaxies__header reveal">
+      <h2 class="galaxies__title">Galaxies</h2>
+      <p class="galaxies__sub">Selected projects &mdash; each one a world of its own</p>
+    </header>
+    <section class="galaxy reveal" data-url="https://rock-band-site.vercel.app" data-color="orange">
       <div class="galaxy__orbit">
         <canvas class="galaxy__canvas" width="600" height="400"></canvas>
       </div>
       <div class="galaxy__info">
         <h2 class="galaxy__name">5051 Band</h2>
-        <p class="galaxy__desc">Pixel art rock band site — music, energy, Manhattan vibes</p>
+        <p class="galaxy__desc">Punk rock from Belarus &mdash; a horizontal-scroll pixel odyssey</p>
+        <p class="galaxy__case">Stage under lightning. Manhattan skyline at dusk. Brooklyn Bridge with the Statue of Liberty. Desert with cactus and an eagle. Every scene hand-pixeled on Canvas 2D &mdash; walking musicians, six hidden secrets, zero templates. Just stubborn craft.</p>
+        <div class="galaxy__shots" aria-label="5051 live site previews">
+          <div class="galaxy__shots-frame">
+            <picture><source srcset="assets/5051/04-stage.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/5051/04-stage.jpg" alt="5051 live stage with lightning and pixel crowd" loading="lazy"></picture>
+            <picture><source srcset="assets/5051/01-desert.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/01-desert.jpg" alt="5051 desert scene with cactus and sunset" loading="lazy"></picture>
+            <picture><source srcset="assets/5051/02-liberty.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/02-liberty.jpg" alt="5051 Brooklyn Bridge with Statue of Liberty" loading="lazy"></picture>
+            <picture><source srcset="assets/5051/03-shows.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/03-shows.jpg" alt="5051 tour dates with pixel helicopter" loading="lazy"></picture>
+          </div>
+          <div class="galaxy__shots-dots">
+            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
+            <span class="galaxy__shots-dot" data-i="1"></span>
+            <span class="galaxy__shots-dot" data-i="2"></span>
+            <span class="galaxy__shots-dot" data-i="3"></span>
+          </div>
+        </div>
         <span class="galaxy__stack">HTML &middot; CSS &middot; JavaScript &middot; Canvas&nbsp;2D</span>
         <span class="galaxy__link">Enter Galaxy &rarr;</span>
       </div>
     </section>
 
-    <section class="galaxy" data-url="https://timma-fight.vercel.app" data-color="blue">
+    <section class="galaxy reveal" data-url="https://timma-fight.vercel.app" data-color="blue">
       <div class="galaxy__orbit">
         <canvas class="galaxy__canvas" width="600" height="400"></canvas>
       </div>
       <div class="galaxy__info">
         <h2 class="galaxy__name">TiMMA Fight</h2>
-        <p class="galaxy__desc">MMA fighter portfolio — strength, discipline, victory</p>
+        <p class="galaxy__desc">Brooklyn MMA academy for a 2&times; World Champion</p>
+        <p class="galaxy__case">A fighter's brand, not a template. Cinematic Framer Motion reveals, four-language switch (EN / RU / UA / AZ), typography that lands like a punch. Built for Timur Gasanov &mdash; 6-1 pro, coach of a UFC fighter &mdash; not another landing page.</p>
+        <div class="galaxy__shots" aria-label="TiMMA Fight site previews">
+          <div class="galaxy__shots-frame">
+            <picture><source srcset="assets/timma/01-hero.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/timma/01-hero.jpg" alt="TiMMA MMA Fighting Academy hero page" loading="lazy"></picture>
+            <picture><source srcset="assets/timma/02-coach.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/02-coach.jpg" alt="Coach Timur Gasanov stats: 6-1 record, 2x World Champion" loading="lazy"></picture>
+            <picture><source srcset="assets/timma/03-training.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/03-training.jpg" alt="Training programs: fight prep, group classes, gym, outdoor" loading="lazy"></picture>
+          </div>
+          <div class="galaxy__shots-dots">
+            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
+            <span class="galaxy__shots-dot" data-i="1"></span>
+            <span class="galaxy__shots-dot" data-i="2"></span>
+          </div>
+        </div>
         <span class="galaxy__stack">Next.js &middot; TypeScript &middot; Framer&nbsp;Motion</span>
         <span class="galaxy__link">Enter Galaxy &rarr;</span>
       </div>
     </section>
 
-    <section class="galaxy" data-url="https://vichna-pamyat.com.ua/" data-color="purple">
+    <section class="galaxy reveal" data-url="https://vichna-pamyat.com.ua/" data-color="purple">
       <div class="galaxy__orbit">
         <canvas class="galaxy__canvas" width="600" height="400"></canvas>
       </div>
       <div class="galaxy__info">
         <h2 class="galaxy__name">Vichna Pamyat</h2>
-        <p class="galaxy__desc">Memorial site — a place of eternal memory and love</p>
+        <p class="galaxy__desc">A memorial site for families in Ladyzhyn &mdash; built with care</p>
+        <p class="galaxy__case">Real production work for real grief. Three candles on the hero, quiet typography, nothing loud. Supabase backend, a custom Telegram bot that wakes me when a family sends a request at 3&nbsp;AM, Google Maps to the office. Full-stack, respectful, alive since the day my mother passed &mdash; this one I built for her.</p>
+        <div class="galaxy__shots" aria-label="Vichna Pamyat site previews">
+          <div class="galaxy__shots-frame">
+            <picture><source srcset="assets/vichna/01-hero.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/vichna/01-hero.jpg" alt="Vichna Pamyat memorial hero with three candles" loading="lazy"></picture>
+            <picture><source srcset="assets/vichna/02-advantages.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/02-advantages.jpg" alt="Why families choose us section" loading="lazy"></picture>
+            <picture><source srcset="assets/vichna/03-services.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/03-services.jpg" alt="Funeral services catalog" loading="lazy"></picture>
+            <picture><source srcset="assets/vichna/04-map.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/04-map.jpg" alt="Office location on Google Maps in Ladyzhyn" loading="lazy"></picture>
+          </div>
+          <div class="galaxy__shots-dots">
+            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
+            <span class="galaxy__shots-dot" data-i="1"></span>
+            <span class="galaxy__shots-dot" data-i="2"></span>
+            <span class="galaxy__shots-dot" data-i="3"></span>
+          </div>
+        </div>
         <span class="galaxy__stack">Next.js &middot; Supabase &middot; Telegram&nbsp;API</span>
         <span class="galaxy__link">Enter Galaxy &rarr;</span>
       </div>
     </section>
   </main>
 
+  <section class="contact" id="contact">
+    <h2 class="contact__title reveal">Transmit Signal</h2>
+    <p class="contact__sub reveal reveal--delay-1">Got a project? A weird idea? A challenge? Send it.</p>
+    <form class="contact-form reveal reveal--delay-2" id="contact-form" novalidate>
+      <div class="contact-form__row">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" required autocomplete="name" maxlength="80">
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" required autocomplete="email" maxlength="120">
+        </label>
+      </div>
+      <label>
+        <span>Message</span>
+        <textarea name="message" required rows="5" maxlength="4000"></textarea>
+      </label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+      <button type="submit" class="contact-form__submit">
+        <span>Transmit</span>
+        <span aria-hidden="true">&rarr;</span>
+      </button>
+      <p class="contact-form__status" role="status"></p>
+    </form>
+  </section>
+
   <footer class="footer">
     <p>&copy; 2026 RS69 &mdash; Rogue Signal. Origin unknown. Quality undeniable.</p>
+    <p class="footer__stack">Built with WebGL shaders &middot; Canvas 2D &middot; model-viewer &middot; Telegram API</p>
+    <p class="footer__sign">
+      <span class="footer__sign-label">designed by</span>
+      <a class="footer__sign-mark" href="https://rs69.dev" target="_blank" rel="noopener">RS<sup>69</sup></a>
+    </p>
   </footer>
 
-  <script src="script.min.js?v=49"></script>
+  <script src="script.min.js?v=118"></script>
 </body>
 </html>
