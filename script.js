@@ -1300,12 +1300,6 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
   let firstBHShown=false;
   let prevBhFullyFormed=false;
   const bhFirstHint="Oh great, a black hole. Hold the cursor still — watch it chew the letters. Just... don't point it at me, alright?";
-  const bhSubsequent=[
-    "Oh no, not that vacuum thing again.",
-    "Here we go. AGAIN.",
-    "Really? That thing? Right now?",
-    "Seriously, the black hole? Again?"
-  ];
 
   // Absorption / return state machine
   let astroState='normal'; // 'normal' | 'absorbing' | 'absorbed' | 'returning'
@@ -1476,6 +1470,7 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
         // fresh BH session — reset proximity tracker so warnings can fire immediately
         bhInProximity=false;
         bhInProxT=0;
+        let bubbleSet=false;
         if(bhDist<BH_PROXIMITY){
           // BH spawned right next to astronaut — skip the generic ack, go straight to warning
           if(bhReactCount>=bhThoughts.length){
@@ -1493,16 +1488,17 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
             bhReactCount++;
           }
           bhInProximity=true;
+          bubbleSet=true;
         } else if(!firstBHShown){
           bubble.textContent=bhFirstHint;
           bubbleShowTime=BUBBLE_DURATION+2;
           firstBHShown=true;
-        } else {
-          bubble.textContent=bhSubsequent[Math.floor(Math.random()*bhSubsequent.length)];
-          bubbleShowTime=BUBBLE_DURATION;
+          bubbleSet=true;
         }
-        bubble.classList.add('visible');
-        bubbleVisible=true;
+        if(bubbleSet){
+          bubble.classList.add('visible');
+          bubbleVisible=true;
+        }
       } else if(bhFullyFormed && bhDist<BH_PROXIMITY){
         bhInProxT+=0.016;
         // Force absorption after all warnings used AND 2s of sustained proximity,
