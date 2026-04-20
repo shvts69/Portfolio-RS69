@@ -162,6 +162,24 @@ body {
   letter-spacing: 0.3em;
   text-transform: uppercase;
 }
+.header__caption {
+  margin-top: 0.9rem;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: clamp(0.68rem, 1.1vw, 0.82rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .header__caption {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    padding: 0 1rem;
+    line-height: 1.6;
+  }
+}
 @keyframes shimmer-text {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -973,6 +991,7 @@ a.footer__sign-mark:hover::before {
 .reveal--delay-1 { transition-delay: 0.1s; }
 .reveal--delay-2 { transition-delay: 0.22s; }
 .reveal--delay-3 { transition-delay: 0.35s; }
+.reveal--delay-4 { transition-delay: 0.48s; }
 
 /* ===== CONTACT SECTION ===== */
 .contact {
