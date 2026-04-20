@@ -871,10 +871,18 @@ gS.forEach((g)=>obs.observe(g));
 document.querySelectorAll('.about').forEach((a)=>obs.observe(a));
 
 /* ===== 6. CLICK ===== */
-gS.forEach((g)=>{g.addEventListener('click',()=>{const u=g.dataset.url;if(!u)return;
+function openGalaxy(g){
+  const u=g.dataset.url;if(!u)return;
   g.style.transition='transform 0.6s,opacity 0.6s';g.style.transform='scale(1.1)';g.style.opacity='0.5';
-  setTimeout(()=>{window.open(u,'_blank');g.style.transform='';g.style.opacity='';
-    setTimeout(()=>{g.style.transition='';},600);},400);});});
+  setTimeout(()=>{window.open(u,'_blank','noopener,noreferrer');g.style.transform='';g.style.opacity='';
+    setTimeout(()=>{g.style.transition='';},600);},400);
+}
+gS.forEach((g)=>{
+  g.addEventListener('click',()=>openGalaxy(g));
+  g.addEventListener('keydown',(e)=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();openGalaxy(g);}
+  });
+});
 
 /* ===== 6a. GALAXY TILT — merged into parallax loop below (see section 7) ===== */
 
