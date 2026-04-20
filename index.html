@@ -45,7 +45,8 @@
   </script>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/orbitron-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/exo2-latin.woff2" crossorigin>
-  <link rel="stylesheet" href="styles.min.css?v=91">
+  <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
+  <link rel="stylesheet" href="styles.min.css?v=92">
   <script>if(!matchMedia('(pointer: coarse)').matches){const s=document.createElement('script');s.type='module';s.src='https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';document.head.appendChild(s);}</script>
   <meta name="twitter:image:alt" content="RS69 — astronaut drifting past a purple nebula above the rs69.dev logo">
   <meta name="theme-color" content="#0a0014">
@@ -153,7 +154,7 @@
       <div class="about__portrait-frame">
         <picture>
           <source srcset="assets/me/portrait.webp" type="image/webp">
-          <img src="assets/me/portrait.jpg" alt="Ross Shvts — portrait" loading="lazy" width="280" height="373">
+          <img src="assets/me/portrait.jpg" alt="Ross Shvts — portrait" loading="lazy" decoding="async" width="280" height="373">
         </picture>
       </div>
       <p class="about__portrait-label">Signal origin &mdash; identity withheld</p>
@@ -201,10 +202,10 @@
         <p class="galaxy__case">Stage under lightning. Manhattan skyline at dusk. Brooklyn Bridge with the Statue of Liberty. Desert with cactus and an eagle. Every scene hand-pixeled on Canvas 2D &mdash; walking musicians, six hidden secrets across five scenes, zero templates. Built across 2026 &mdash; just stubborn craft.</p>
         <div class="galaxy__shots" aria-label="5051 live site previews">
           <div class="galaxy__shots-frame">
-            <picture><source srcset="assets/5051/04-stage.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/5051/04-stage.jpg" alt="5051 live stage with lightning and pixel crowd" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/5051/01-desert.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/01-desert.jpg" alt="5051 desert scene with cactus and sunset" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/5051/02-liberty.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/02-liberty.jpg" alt="5051 Brooklyn Bridge with Statue of Liberty" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/5051/03-shows.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/03-shows.jpg" alt="5051 tour dates with pixel helicopter" width="1400" height="800" loading="lazy"></picture>
+            <picture><source srcset="assets/5051/04-stage.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/5051/04-stage.jpg" alt="5051 live stage with lightning and pixel crowd" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/5051/01-desert.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/01-desert.jpg" alt="5051 desert scene with cactus and sunset" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/5051/02-liberty.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/02-liberty.jpg" alt="5051 Brooklyn Bridge with Statue of Liberty" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/5051/03-shows.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/03-shows.jpg" alt="5051 tour dates with pixel helicopter" width="1400" height="800" loading="lazy" decoding="async"></picture>
           </div>
           <div class="galaxy__shots-dots">
             <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
@@ -229,9 +230,9 @@
         <p class="galaxy__case">A fighter's brand, not a template. Cinematic Framer Motion reveals, four-language switch (EN / RU / UA / AZ), typography that lands like a punch. Shipped 2026 for Timur Gasanov &mdash; 6-1 pro, coach of a UFC fighter &mdash; not another landing page.</p>
         <div class="galaxy__shots" aria-label="TiMMA Fight site previews">
           <div class="galaxy__shots-frame">
-            <picture><source srcset="assets/timma/01-hero.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/timma/01-hero.jpg" alt="TiMMA MMA Fighting Academy hero page" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/timma/02-coach.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/02-coach.jpg" alt="Coach Timur Gasanov stats: 6-1 record, 2x World Champion" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/timma/03-training.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/03-training.jpg" alt="Training programs: fight prep, group classes, gym, outdoor" width="1400" height="800" loading="lazy"></picture>
+            <picture><source srcset="assets/timma/01-hero.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/timma/01-hero.jpg" alt="TiMMA MMA Fighting Academy hero page" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/timma/02-coach.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/02-coach.jpg" alt="Coach Timur Gasanov stats: 6-1 record, 2x World Champion" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/timma/03-training.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/03-training.jpg" alt="Training programs: fight prep, group classes, gym, outdoor" width="1400" height="800" loading="lazy" decoding="async"></picture>
           </div>
           <div class="galaxy__shots-dots">
             <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
@@ -255,10 +256,10 @@
         <p class="galaxy__case">Real production work for real grief. Three candles on the hero, quiet typography, nothing loud. Supabase backend, a custom Telegram bot that wakes me when a family sends a request at 3&nbsp;AM, Google Maps to the office. Full-stack, respectful, live since 2026 &mdash; built the day my mother passed, for her.</p>
         <div class="galaxy__shots" aria-label="Vichna Pamyat site previews">
           <div class="galaxy__shots-frame">
-            <picture><source srcset="assets/vichna/01-hero.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/vichna/01-hero.jpg" alt="Vichna Pamyat memorial hero with three candles" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/vichna/02-advantages.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/02-advantages.jpg" alt="Why families choose us section" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/vichna/03-services.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/03-services.jpg" alt="Funeral services catalog" width="1400" height="800" loading="lazy"></picture>
-            <picture><source srcset="assets/vichna/04-map.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/04-map.jpg" alt="Office location on Google Maps in Ladyzhyn" width="1400" height="800" loading="lazy"></picture>
+            <picture><source srcset="assets/vichna/01-hero.webp" type="image/webp"><img class="galaxy__shot galaxy__shot--active" src="assets/vichna/01-hero.jpg" alt="Vichna Pamyat memorial hero with three candles" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/vichna/02-advantages.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/02-advantages.jpg" alt="Why families choose us section" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/vichna/03-services.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/03-services.jpg" alt="Funeral services catalog" width="1400" height="800" loading="lazy" decoding="async"></picture>
+            <picture><source srcset="assets/vichna/04-map.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/04-map.jpg" alt="Office location on Google Maps in Ladyzhyn" width="1400" height="800" loading="lazy" decoding="async"></picture>
           </div>
           <div class="galaxy__shots-dots">
             <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
@@ -309,6 +310,6 @@
     </p>
   </footer>
 
-  <script src="script.min.js?v=121"></script>
+  <script src="script.min.js?v=122"></script>
 </body>
 </html>

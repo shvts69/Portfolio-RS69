@@ -249,6 +249,8 @@ html { scrollbar-width: thin; scrollbar-color: rgba(167, 139, 250, 0.45) transpa
   text-align: center;
   opacity: 0; transform: translateY(60px);
   transition: opacity 1s ease, transform 1s ease;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 .about.visible { opacity: 1; transform: translateY(0); }
 .about__portrait {
@@ -1040,6 +1042,8 @@ a.footer__sign-mark:hover::before {
   margin: 6rem auto 4rem;
   padding: 3rem 2rem;
   text-align: center;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 .contact__title {
   font-family: 'Orbitron', sans-serif;

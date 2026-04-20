@@ -1222,7 +1222,7 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     const nv=scrollY-prevScrollY;
     prevScrollY=scrollY;
     scrollPushVel+=nv*2.5;
-  });
+  },{passive:true});
 
   // Waypoint system — astronaut drifts across the full screen
   function randomPos(){
@@ -2092,6 +2092,19 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
   function svgWidthRatio(){ return innerWidth<=768 ? 1.4 : 1.3; }
   const start=performance.now();
 
+  // Pause the rAF loop when the header is scrolled off-screen — the planet is
+  // invisible there anyway, no reason to repaint at 60fps.
+  let visible=true;
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        const wasVisible=visible;
+        visible=e.isIntersecting;
+        if(visible && !wasVisible) requestAnimationFrame(tick);
+      });
+    },{rootMargin:'50px'}).observe(mark);
+  }
+
   function tick(now){
     const t=((now-start)%DUR)/DUR;
     const a=t*Math.PI*2;
@@ -2107,7 +2120,7 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     planet.style.transform='translate('+dx+'px,'+dy+'px)';
     planet.style.zIndex=(pyVB<CY)?'0':'2';
 
-    requestAnimationFrame(tick);
+    if(visible) requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 })();
