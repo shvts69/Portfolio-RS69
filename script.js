@@ -11,6 +11,12 @@
 })();
 
 const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coarse)').matches);
+// Weak hardware detection — covers Windows laptops with slow CPUs / low RAM that
+// don't trip the mobile check but still choke on full-fat particle counts.
+const HW_CORES = navigator.hardwareConcurrency || 0;
+const HW_MEM = navigator.deviceMemory || 0; // Chrome-only, returns 0 elsewhere
+const IS_LOW_END = (HW_CORES > 0 && HW_CORES <= 4) || (HW_MEM > 0 && HW_MEM <= 4);
+const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
 
 /* ===== 1. WEBGL HELIX NEBULA (Eye of God) ===== */
 (function initNebula() {
@@ -19,7 +25,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
   if (!gl) return;
 
   // Downsample on mobile — fragment shader is heavy
-  const PIX_SCALE = IS_MOBILE ? 0.55 : 1;
+  const PIX_SCALE = IS_LOW_POWER ? 0.55 : 1;
 
   function resize() {
     canvas.width = Math.round(innerWidth * PIX_SCALE);
@@ -30,8 +36,8 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
 
   const vSrc = `attribute vec2 a;void main(){gl_Position=vec4(a,0,1);}`;
 
-  const NEB_SCALE = IS_MOBILE ? 2.2 : 1.0;
-  const MOTION_MUL = IS_MOBILE ? 1.0 : 1.8;
+  const NEB_SCALE = IS_LOW_POWER ? 2.2 : 1.0;
+  const MOTION_MUL = IS_LOW_POWER ? 1.0 : 1.8;
 
   const fSrc = `
   precision highp float;
@@ -181,7 +187,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
     gl.uniform1f(uT,t*0.001);gl.uniform2f(uR,canvas.width,canvas.height);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     // Mobile: 20fps on nebula — it's ambient, no one notices
-    setTimeout(()=>requestAnimationFrame(draw),IS_MOBILE?50:16);
+    setTimeout(()=>requestAnimationFrame(draw),IS_LOW_POWER?50:16);
   }
   requestAnimationFrame(draw);
 })();
@@ -191,13 +197,13 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
 (function initStars(){
   const c=document.getElementById('stars-canvas');
   const ctx=c.getContext('2d');
-  let stars=[];const N=IS_MOBILE?180:1100;
+  let stars=[];const N=IS_LOW_POWER?180:1100;
   const PAL=[[255,255,255],[167,139,250],[96,165,250],[251,191,146],[196,181,253]];
   let mx=-999,my=-999,pmx=-999,pmy=-999,mouseStill=0;
   const PUSH_R=80,PUSH_F=1.8;
   // Mobile: longer hold required before BH forms — prevents accidental triggers while scrolling/reading
-  const VORTEX_R=200,VORTEX_F=0.45,VORTEX_TH=IS_MOBILE?75:25;
-  const sparkles=[];const MAX_SP=IS_MOBILE?0:50;let spT=0;
+  const VORTEX_R=200,VORTEX_F=0.45,VORTEX_TH=IS_LOW_POWER?75:25;
+  const sparkles=[];const MAX_SP=IS_LOW_POWER?0:50;let spT=0;
 
   // Track if cursor is over a galaxy CANVAS (not the text area)
   let overGalaxy=false;
@@ -248,7 +254,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
     const BELT_IN=R_EH*BELT_IN_M;
     const BELT_SPAN=R_EH*(BELT_OUT_M-BELT_IN_M);
     const lift=R_EH*BELT_LIFT;
-    const N=IS_MOBILE?260:2800;
+    const N=IS_LOW_POWER?260:2800;
     const p5=phase*5;
     for(let i=0;i<N;i++){
       const s1=(i*0.6180339887)%1;
@@ -288,7 +294,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
       const tint=s3<0.25?[255,225,185]:s3<0.6?[255,240,215]:[255,250,245];
       ctx.fillStyle=`rgba(${tint[0]},${tint[1]},${tint[2]},${a})`;
       ctx.beginPath();ctx.arc(x,y,rad,0,TAU);ctx.fill();
-      if(!IS_MOBILE && rad>0.75){
+      if(!IS_LOW_POWER && rad>0.75){
         ctx.fillStyle=`rgba(${tint[0]},${tint[1]},${tint[2]},${a*0.26})`;
         ctx.beginPath();ctx.arc(x,y,rad*2.1,0,TAU);ctx.fill();
       }
@@ -297,7 +303,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
 
   // Photon shell — very thick on top, thin on bottom, flares out at sides to meet the belt.
   function drawStarContour(cx,cy,R_EH,sz,phase){
-    const N=IS_MOBILE?100:780;
+    const N=IS_LOW_POWER?100:780;
     const p7=phase*7;
     for(let i=0;i<N;i++){
       const s1=(i*0.6180339887)%1;
@@ -324,7 +330,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
       const rad=0.45+s3*0.55+topF*0.35;
       ctx.fillStyle=`rgba(255,248,230,${a})`;
       ctx.beginPath();ctx.arc(x,y,rad,0,TAU);ctx.fill();
-      if(!IS_MOBILE && rad>0.8){
+      if(!IS_LOW_POWER && rad>0.8){
         ctx.fillStyle=`rgba(255,215,160,${a*0.45})`;
         ctx.beginPath();ctx.arc(x,y,rad*2.6,0,TAU);ctx.fill();
       }
@@ -357,7 +363,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
 
   // === SHOOTING STARS — realistic meteors ===
   const shooters=[];
-  let shootNext=IS_MOBILE?(300+Math.random()*500):(50+Math.random()*140); // frames until next shooting star
+  let shootNext=IS_LOW_POWER?(300+Math.random()*500):(50+Math.random()*140); // frames until next shooting star
   let shootFrame=0;
 
   function spawnShooter(){
@@ -443,7 +449,7 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
     window.__bh={active:isV,str:vStr,mx,my};
 
     // Advance BH rotation phase once per frame — used by belt, contour, captured stars.
-    if(isV&&vStr>=0.05){BH_STATE.phase+=IS_MOBILE?0.035:0.028;}
+    if(isV&&vStr>=0.05){BH_STATE.phase+=IS_LOW_POWER?0.035:0.028;}
     const phase=BH_STATE.phase;
 
     // cursor glow (when not black hole)
@@ -527,12 +533,12 @@ const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coar
     if(shootFrame>=shootNext){
       spawnShooter();
       shootFrame=0;
-      shootNext=IS_MOBILE?(300+Math.random()*500):(70+Math.random()*230); // mobile: slower
+      shootNext=IS_LOW_POWER?(300+Math.random()*500):(70+Math.random()*230); // low-power: slower
     }
     drawShooters();
 
     // Mobile: 30fps on stars — enough to feel alive, half the cost
-    setTimeout(()=>requestAnimationFrame(draw),IS_MOBILE?33:16);
+    setTimeout(()=>requestAnimationFrame(draw),IS_LOW_POWER?33:16);
   }
   resize();draw();addEventListener('resize',resize);
 })();
@@ -599,7 +605,7 @@ function createGalaxy(canvas,theme,section){
     }
   }
 
-  const M=IS_MOBILE?0.25:1; // mobile particle multiplier
+  const M=IS_LOW_POWER?0.25:1; // low-power particle multiplier
   const nBg=Math.round(8000*M), nMid=Math.round(2500*M), nBright=Math.round(300*M);
   const nNeb=Math.round(70*M), nDustL=Math.round(35*M), nDustB=Math.round(85*M);
   const nClouds=Math.round(55*M), nRays=Math.round(28*M), nHot=Math.round(30*M);
@@ -833,7 +839,7 @@ function createGalaxy(canvas,theme,section){
     ctx.beginPath();ctx.arc(cx,cy,2.5,0,Math.PI*2);
     ctx.fillStyle=`rgba(255,255,255,${cpA})`;ctx.fill();
     // cap at 30fps desktop / 20fps mobile — galaxies are heavy (3 × ~11k particles)
-    if(visible){setTimeout(()=>requestAnimationFrame(draw),IS_MOBILE?50:33);}
+    if(visible){setTimeout(()=>requestAnimationFrame(draw),IS_LOW_POWER?50:33);}
     else{pending=true;}
   }
 
@@ -872,7 +878,7 @@ gS.forEach((g)=>{g.addEventListener('click',()=>{const u=g.dataset.url;if(!u)ret
 
 /* ===== 6a. GALAXY TILT — cursor-reactive 3D perspective (desktop only) ===== */
 (function initGalaxyTilt(){
-  if(IS_MOBILE) return;
+  if(IS_LOW_POWER) return;
   gS.forEach(g=>{
     const orbit=g.querySelector('.galaxy__orbit');
     if(!orbit) return;
@@ -923,7 +929,7 @@ gS.forEach((g)=>{g.addEventListener('click',()=>{const u=g.dataset.url;if(!u)ret
 })();
 
 /* ===== 7. PARALLAX ===== */
-if(!IS_MOBILE){
+if(!IS_LOW_POWER){
   let mX2=0,mY2=0,tX2=0,tY2=0;
   document.addEventListener('mousemove',(e)=>{mX2=(e.clientX/innerWidth-0.5)*2;mY2=(e.clientY/innerHeight-0.5)*2;});
   function pxL(){tX2+=(mX2-tX2)*0.05;tY2+=(mY2-tY2)*0.05;
@@ -1554,8 +1560,8 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
       }
     }
 
-    // cap at 60fps so 120Hz displays don't double-speed
-    setTimeout(()=>requestAnimationFrame(animate),16);
+    // cap at 60fps normally, 30fps on weak hardware to keep model-viewer responsive
+    setTimeout(()=>requestAnimationFrame(animate),IS_LOW_END?33:16);
   }
   animate();
 })();
@@ -2104,4 +2110,51 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+})();
+
+/* ===== EMAIL FALLBACK — Windows laptops often have no mail client for mailto:,
+   so the icon appears dead. Open Gmail compose + copy address + show toast. ===== */
+(function initEmailFallback(){
+  const links=document.querySelectorAll('a[href^="mailto:"]');
+  if(!links.length) return;
+
+  let toast=null, toastTimer=0;
+  function showToast(msg){
+    if(!toast){
+      toast=document.createElement('div');
+      toast.className='rs69-toast';
+      toast.setAttribute('role','status');
+      toast.setAttribute('aria-live','polite');
+      document.body.appendChild(toast);
+    }
+    toast.textContent=msg;
+    toast.classList.add('rs69-toast--visible');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>{toast.classList.remove('rs69-toast--visible');},2800);
+  }
+
+  function copyEmail(email){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(email).catch(()=>false);
+    }
+    try{
+      const ta=document.createElement('textarea');
+      ta.value=email; ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      return Promise.resolve(true);
+    }catch(_){return Promise.resolve(false);}
+  }
+
+  links.forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const href=a.getAttribute('href')||'';
+      const email=href.replace(/^mailto:/i,'').split('?')[0].trim();
+      if(!email) return;
+      e.preventDefault();
+      const gmail='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(email);
+      window.open(gmail,'_blank','noopener');
+      copyEmail(email).then(()=>showToast('Gmail opened — '+email+' copied'));
+    });
+  });
 })();
