@@ -52,6 +52,39 @@
   <meta name="theme-color" content="#0a0014">
 </head>
 <body>
+  <noscript>
+    <style>
+      .rs69-noscript{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:2rem;background:#0a0014;color:#e6e6f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.6;overflow-y:auto}
+      .rs69-noscript__inner{max-width:560px;text-align:center}
+      .rs69-noscript h1{font-size:1.5rem;letter-spacing:.18em;margin:0 0 .4rem;color:#fff;font-weight:600}
+      .rs69-noscript__tag{font-size:.85rem;letter-spacing:.1em;color:rgba(167,139,250,.85);margin-bottom:1.6rem;text-transform:uppercase}
+      .rs69-noscript p{margin:.6rem 0;color:rgba(230,230,240,.85)}
+      .rs69-noscript a{color:#a78bfa;text-decoration:none;border-bottom:1px solid rgba(167,139,250,.35);padding:0 2px}
+      .rs69-noscript a:hover{color:#fff;border-color:#fff}
+      .rs69-noscript ul{list-style:none;padding:0;margin:1.6rem 0 1.2rem}
+      .rs69-noscript li{margin:.6rem 0}
+      .rs69-noscript__contacts{margin-top:1.2rem;font-size:.92rem}
+    </style>
+    <div class="rs69-noscript">
+      <div class="rs69-noscript__inner">
+        <h1>RS69 &mdash; ROGUE SIGNAL 69</h1>
+        <p class="rs69-noscript__tag">Creative Developer Studio</p>
+        <p>This portfolio uses WebGL and interactive animations &mdash; JavaScript needs to be enabled to see the full experience.</p>
+        <ul>
+          <li><a href="https://rock-band-site.vercel.app">5051 Band</a> &mdash; pixel-art punk rock site</li>
+          <li><a href="https://timma-fight.vercel.app">TiMMA Fight</a> &mdash; Brooklyn MMA coach portfolio</li>
+          <li><a href="https://vichna-pamyat.com.ua/">Vichna Pamyat</a> &mdash; memorial services site</li>
+        </ul>
+        <p class="rs69-noscript__contacts">
+          <a href="mailto:shvts69@gmail.com">shvts69@gmail.com</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://github.com/shvts69" rel="noopener noreferrer">GitHub</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://t.me/shv_ts" rel="noopener noreferrer">Telegram</a>
+        </p>
+      </div>
+    </div>
+  </noscript>
   <a href="#main" class="skip-link">Skip to content</a>
 
   <!-- Preloader -->
@@ -207,11 +240,11 @@
             <picture><source srcset="assets/5051/02-liberty.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/02-liberty.jpg" alt="5051 Brooklyn Bridge with Statue of Liberty" width="1400" height="800" loading="lazy" decoding="async"></picture>
             <picture><source srcset="assets/5051/03-shows.webp" type="image/webp"><img class="galaxy__shot" src="assets/5051/03-shows.jpg" alt="5051 tour dates with pixel helicopter" width="1400" height="800" loading="lazy" decoding="async"></picture>
           </div>
-          <div class="galaxy__shots-dots">
-            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
-            <span class="galaxy__shots-dot" data-i="1"></span>
-            <span class="galaxy__shots-dot" data-i="2"></span>
-            <span class="galaxy__shots-dot" data-i="3"></span>
+          <div class="galaxy__shots-dots" role="tablist" aria-label="5051 Band shot selector">
+            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0" role="button" tabindex="0" aria-label="Show shot 1 of 4" aria-current="true"></span>
+            <span class="galaxy__shots-dot" data-i="1" role="button" tabindex="0" aria-label="Show shot 2 of 4"></span>
+            <span class="galaxy__shots-dot" data-i="2" role="button" tabindex="0" aria-label="Show shot 3 of 4"></span>
+            <span class="galaxy__shots-dot" data-i="3" role="button" tabindex="0" aria-label="Show shot 4 of 4"></span>
           </div>
         </div>
         <span class="galaxy__stack">HTML &middot; CSS &middot; JavaScript &middot; Canvas&nbsp;2D</span>
@@ -234,10 +267,10 @@
             <picture><source srcset="assets/timma/02-coach.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/02-coach.jpg" alt="Coach Timur Gasanov stats: 6-1 record, 2x World Champion" width="1400" height="800" loading="lazy" decoding="async"></picture>
             <picture><source srcset="assets/timma/03-training.webp" type="image/webp"><img class="galaxy__shot" src="assets/timma/03-training.jpg" alt="Training programs: fight prep, group classes, gym, outdoor" width="1400" height="800" loading="lazy" decoding="async"></picture>
           </div>
-          <div class="galaxy__shots-dots">
-            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
-            <span class="galaxy__shots-dot" data-i="1"></span>
-            <span class="galaxy__shots-dot" data-i="2"></span>
+          <div class="galaxy__shots-dots" role="tablist" aria-label="TiMMA Fight shot selector">
+            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0" role="button" tabindex="0" aria-label="Show shot 1 of 3" aria-current="true"></span>
+            <span class="galaxy__shots-dot" data-i="1" role="button" tabindex="0" aria-label="Show shot 2 of 3"></span>
+            <span class="galaxy__shots-dot" data-i="2" role="button" tabindex="0" aria-label="Show shot 3 of 3"></span>
           </div>
         </div>
         <span class="galaxy__stack">Next.js &middot; TypeScript &middot; Framer&nbsp;Motion</span>
@@ -261,11 +294,11 @@
             <picture><source srcset="assets/vichna/03-services.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/03-services.jpg" alt="Funeral services catalog" width="1400" height="800" loading="lazy" decoding="async"></picture>
             <picture><source srcset="assets/vichna/04-map.webp" type="image/webp"><img class="galaxy__shot" src="assets/vichna/04-map.jpg" alt="Office location on Google Maps in Ladyzhyn" width="1400" height="800" loading="lazy" decoding="async"></picture>
           </div>
-          <div class="galaxy__shots-dots">
-            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0"></span>
-            <span class="galaxy__shots-dot" data-i="1"></span>
-            <span class="galaxy__shots-dot" data-i="2"></span>
-            <span class="galaxy__shots-dot" data-i="3"></span>
+          <div class="galaxy__shots-dots" role="tablist" aria-label="Vichna Pamyat shot selector">
+            <span class="galaxy__shots-dot galaxy__shots-dot--active" data-i="0" role="button" tabindex="0" aria-label="Show shot 1 of 4" aria-current="true"></span>
+            <span class="galaxy__shots-dot" data-i="1" role="button" tabindex="0" aria-label="Show shot 2 of 4"></span>
+            <span class="galaxy__shots-dot" data-i="2" role="button" tabindex="0" aria-label="Show shot 3 of 4"></span>
+            <span class="galaxy__shots-dot" data-i="3" role="button" tabindex="0" aria-label="Show shot 4 of 4"></span>
           </div>
         </div>
         <span class="galaxy__stack">Next.js &middot; Supabase &middot; Telegram&nbsp;API</span>
@@ -310,6 +343,6 @@
     </p>
   </footer>
 
-  <script src="script.min.js?v=124"></script>
+  <script src="script.min.js?v=125"></script>
 </body>
 </html>

@@ -896,13 +896,24 @@ gS.forEach((g)=>{
     function show(i){
       idx=(i+shots.length)%shots.length;
       shots.forEach((s,n)=>s.classList.toggle('galaxy__shot--active',n===idx));
-      dots.forEach((d,n)=>d.classList.toggle('galaxy__shots-dot--active',n===idx));
+      dots.forEach((d,n)=>{
+        const active=(n===idx);
+        d.classList.toggle('galaxy__shots-dot--active',active);
+        if(active) d.setAttribute('aria-current','true'); else d.removeAttribute('aria-current');
+      });
     }
     function start(){stop();timer=setInterval(()=>{if(!paused) show(idx+1);},4500);}
     function stop(){if(timer){clearInterval(timer);timer=null;}}
     wrap.addEventListener('mouseenter',()=>{paused=true;});
     wrap.addEventListener('mouseleave',()=>{paused=false;});
-    dots.forEach((d,n)=>d.addEventListener('click',e=>{e.stopPropagation();show(n);start();}));
+    dots.forEach((d,n)=>{
+      d.addEventListener('click',e=>{e.stopPropagation();show(n);start();});
+      d.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();e.stopPropagation();show(n);start();
+        }
+      });
+    });
     // Pause rotation when section off-screen
     if('IntersectionObserver' in window){
       const sec=wrap.closest('.galaxy');
