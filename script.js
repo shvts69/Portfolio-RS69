@@ -876,28 +876,7 @@ gS.forEach((g)=>{g.addEventListener('click',()=>{const u=g.dataset.url;if(!u)ret
   setTimeout(()=>{window.open(u,'_blank');g.style.transform='';g.style.opacity='';
     setTimeout(()=>{g.style.transition='';},600);},400);});});
 
-/* ===== 6a. GALAXY TILT — cursor-reactive 3D perspective (desktop only) ===== */
-(function initGalaxyTilt(){
-  if(IS_LOW_POWER) return;
-  gS.forEach(g=>{
-    const orbit=g.querySelector('.galaxy__orbit');
-    if(!orbit) return;
-    orbit.style.transition='transform 0.35s cubic-bezier(0.2,0.6,0.2,1)';
-    orbit.style.willChange='transform';
-    let raf=0,rx=0,ry=0;
-    g.addEventListener('pointermove',e=>{
-      const r=g.getBoundingClientRect();
-      const nx=((e.clientX-r.left)/r.width-0.5)*2;
-      const ny=((e.clientY-r.top)/r.height-0.5)*2;
-      rx=-ny*5;ry=nx*5;
-      if(!raf) raf=requestAnimationFrame(()=>{
-        orbit.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-        raf=0;
-      });
-    });
-    g.addEventListener('pointerleave',()=>{orbit.style.transform='';});
-  });
-})();
+/* ===== 6a. GALAXY TILT — merged into parallax loop below (see section 7) ===== */
 
 /* ===== 6b. GALAXY CAROUSEL (5051) — auto-rotating screenshot fade ===== */
 (function initGalaxyCarousels(){
@@ -928,14 +907,50 @@ gS.forEach((g)=>{g.addEventListener('click',()=>{const u=g.dataset.url;if(!u)ret
   });
 })();
 
-/* ===== 7. PARALLAX ===== */
+/* ===== 7. PARALLAX + TILT — combined into one rAF so they don't fight over
+     the same transform property. Tilt only fires when the cursor is on the
+     orbit itself (not the whole .galaxy row), and uses a JS-lerped low-pass
+     filter so fast mouse movement produces buttery motion, not jitter. ===== */
 if(!IS_LOW_POWER){
   let mX2=0,mY2=0,tX2=0,tY2=0;
   document.addEventListener('mousemove',(e)=>{mX2=(e.clientX/innerWidth-0.5)*2;mY2=(e.clientY/innerHeight-0.5)*2;});
-  function pxL(){tX2+=(mX2-tX2)*0.05;tY2+=(mY2-tY2)*0.05;
-    gS.forEach((g,i)=>{const d=(i+1)*8;const o=g.querySelector('.galaxy__orbit');
-      if(o)o.style.transform=`translate(${tX2*d}px,${tY2*d}px)`;});requestAnimationFrame(pxL);}
-  pxL();
+
+  const tilts=[];
+  gS.forEach((g,i)=>{
+    const orbit=g.querySelector('.galaxy__orbit');
+    if(!orbit) return;
+    orbit.style.willChange='transform';
+    const s={i, orbit, targetRx:0, targetRy:0, curRx:0, curRy:0};
+    tilts.push(s);
+    orbit.addEventListener('pointermove',e=>{
+      const r=orbit.getBoundingClientRect();
+      const nx=((e.clientX-r.left)/r.width-0.5)*2;
+      const ny=((e.clientY-r.top)/r.height-0.5)*2;
+      // clamp to [-1,1] so corners don't overshoot
+      s.targetRx=-Math.max(-1,Math.min(1,ny))*5;
+      s.targetRy= Math.max(-1,Math.min(1,nx))*5;
+    });
+    orbit.addEventListener('pointerleave',()=>{s.targetRx=0;s.targetRy=0;});
+  });
+
+  function loop(){
+    tX2+=(mX2-tX2)*0.05;
+    tY2+=(mY2-tY2)*0.05;
+    for(const s of tilts){
+      s.curRx+=(s.targetRx-s.curRx)*0.12;
+      s.curRy+=(s.targetRy-s.curRy)*0.12;
+      const d=(s.i+1)*8;
+      const tx=(tX2*d).toFixed(2);
+      const ty=(tY2*d).toFixed(2);
+      const rx=s.curRx.toFixed(2);
+      const ry=s.curRy.toFixed(2);
+      s.orbit.style.transform=
+        `translate(${tx}px,${ty}px) `+
+        `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
 }
 
 /* ===== 8. SCROLL HINT ===== */
