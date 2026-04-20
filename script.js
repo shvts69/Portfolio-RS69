@@ -3,6 +3,13 @@
    Volumetric WebGL nebula + storm galaxies + black-hole cursor
    ============================================================= */
 
+(function rs69Signal(){
+  const t = 'font:18px Orbitron,monospace;color:#a78bfa;text-shadow:0 0 8px #7c3aed';
+  const s = 'font:11px monospace;color:#60a5fa';
+  console.log('%cRS69 — ROGUE SIGNAL', t);
+  console.log('%cVanilla JS · WebGL shaders · Canvas 2D · zero frameworks.\nCurious devs welcome — say hi: shvts69@gmail.com', s);
+})();
+
 const IS_MOBILE = innerWidth <= 768 || (matchMedia && matchMedia('(pointer: coarse)').matches);
 
 /* ===== 1. WEBGL HELIX NEBULA (Eye of God) ===== */

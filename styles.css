@@ -9,6 +9,22 @@ body {
   min-height: 100vh;
 }
 
+/* Brand selection — purple wash on dark */
+::selection { background: rgba(167, 139, 250, 0.45); color: #fff; text-shadow: none; }
+::-moz-selection { background: rgba(167, 139, 250, 0.45); color: #fff; }
+
+/* Custom scrollbar — thin, brand-tinted, blends with cosmic theme */
+html { scrollbar-width: thin; scrollbar-color: rgba(167, 139, 250, 0.45) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.55), rgba(96, 165, 250, 0.55));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.8), rgba(96, 165, 250, 0.8));
+}
+
 /* ===== SPACE BACKGROUND — HD nebula as main visual ===== */
 .space-bg {
   position: fixed;
