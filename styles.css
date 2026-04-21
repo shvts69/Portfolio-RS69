@@ -314,13 +314,13 @@ html { scrollbar-width: thin; scrollbar-color: rgba(167, 139, 250, 0.45) transpa
   font-size: clamp(1.02rem, 1.4vw, 1.18rem);
   line-height: 1.65;
   color: rgba(230, 230, 255, 0.8);
-  margin-bottom: 1.25rem;
+  margin: 0 auto 1.25rem;
   letter-spacing: 0.012em;
   text-wrap: pretty;
   max-width: 62ch;
 }
 .about__cta {
-  margin-top: 2.2rem;
+  margin: 2.2rem auto 0;
   font-size: clamp(1rem, 1.4vw, 1.18rem);
   line-height: 1.45;
   color: rgba(230, 230, 255, 0.85);
