@@ -202,7 +202,7 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
   let mx=-999,my=-999,pmx=-999,pmy=-999,mouseStill=0;
   const PUSH_R=80,PUSH_F=1.8;
   // Mobile: longer hold required before BH forms — prevents accidental triggers while scrolling/reading
-  const VORTEX_R=200,VORTEX_F=0.45,VORTEX_TH=IS_LOW_POWER?75:25;
+  const VORTEX_R=200,VORTEX_F=0.45,VORTEX_TH=IS_LOW_POWER?30:25;
   const sparkles=[];const MAX_SP=IS_LOW_POWER?0:50;let spT=0;
 
   // Track if cursor is over a galaxy CANVAS (not the text area)
@@ -445,11 +445,11 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
     ctx.clearRect(0,0,c.width,c.height);mouseStill++;spT++;
     if(spT%2===0)addSp();
     const isV=mouseStill>VORTEX_TH&&mx>0&&!overGalaxy;
-    const vStr=isV?Math.min((mouseStill-VORTEX_TH)/40,1):0;
+    const vStr=isV?Math.min((mouseStill-VORTEX_TH)/(IS_LOW_POWER?16:40),1):0;
     window.__bh={active:isV,str:vStr,mx,my};
 
     // Advance BH rotation phase once per frame — used by belt, contour, captured stars.
-    if(isV&&vStr>=0.05){BH_STATE.phase+=IS_LOW_POWER?0.035:0.028;}
+    if(isV&&vStr>=0.05){BH_STATE.phase+=IS_LOW_POWER?0.085:0.028;}
     const phase=BH_STATE.phase;
 
     // cursor glow (when not black hole)
@@ -982,7 +982,7 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
   // one per frame is the biggest remaining cost, and touch-hold BH is unreliable.
   if(IS_MOBILE) return;
   // split text into individual letter spans
-  const targets=document.querySelectorAll('.header__sub,.header__tagline,.about__lead,.about__line,.about__cta,.galaxy__name,.galaxy__desc,.galaxy__case,.galaxy__stack,.galaxy__link,.footer p,.footer__stack,.scroll-hint__text');
+  const targets=document.querySelectorAll('.header__sub,.header__tagline,.header__caption,.about__portrait-label,.about__lead,.about__line,.about__cta,.about__connect,.galaxies__title,.galaxies__sub,.galaxy__name,.galaxy__desc,.galaxy__case,.galaxy__stack,.galaxy__link,.contact__title,.contact__sub,.footer p,.footer__stack,.footer__sign-label,.scroll-hint__text');
   const allLetters=[];
   targets.forEach(el=>{
     const text=el.textContent;

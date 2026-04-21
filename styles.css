@@ -1019,6 +1019,7 @@ a.footer__sign-mark:hover::before {
 }
 @media (max-width: 768px) {
   .abs-counter { display: none !important; }
+  .sound-toggle { display: none !important; }
 }
 
 /* ===== SCROLL REVEALS ===== */
