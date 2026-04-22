@@ -1301,7 +1301,7 @@ addEventListener('scroll',()=>{if(!hid&&scrollY>100){hid=true;sh.style.transitio
     "Technically I'm falling forever",
     "Note to self: pack more snacks",
     "Is it Monday on Earth?",
-    "What is this RS69 studio anyway?",
+    "What is this RS69 thing anyway?",
     "Why am I guarding his portfolio?",
     "He builds sites, I float. Fair deal",
     "This site has more effects than NASA",
