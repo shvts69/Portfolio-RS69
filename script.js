@@ -87,7 +87,7 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
     // === RING GEOMETRY ===
     // The ring radius with organic wobble
     float ringR=0.18+0.035*sin(ang*3.0+t*1.8)+0.025*cos(ang*5.0-t*2.2)+0.018*sin(ang*7.0+t*1.3)+0.01*cos(ang*11.0-t*0.7);
-    ringR+=fbm4(vec2(ang*1.5,t*1.2))*0.065; // heavy organic edge
+    ringR+=fbm4(vec2(cos(ang)*1.5,sin(ang)*1.5)+vec2(0.0,t*1.2))*0.065; // heavy organic edge — periodic (no atan2 seam)
 
     float ringDist=abs(dist-ringR); // distance from ring centerline
     float ringWidth=0.11+0.045*sin(ang*2.0+t*1.5)+0.025*cos(ang*4.0-t*1.1)+0.015*sin(ang*6.0+t*0.6); // dramatic pulsing
@@ -101,14 +101,15 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
     float outerEdge=smoothstep(ringR+ringWidth*2.5,ringR,dist);
 
     // === FILAMENT DETAIL — fine radial tendrils like the real Helix ===
-    vec2 warpP=vec2(ang*3.0+t*0.8,dist*8.0);
+    // use (cos,sin)*N so noise is 2π-periodic around the ring — kills the atan2 seam
+    vec2 warpP=vec2(cos(ang)*3.0+t*0.8,sin(ang)*3.0+dist*8.0);
     float filament1=fbm(warpP*2.5+t*1.1);
     float filament2=fbm(warpP*4.0-t*0.8+vec2(3.7,1.2));
     float filFine=pow(abs(filament1-0.5)*2.0,0.4);
     float filCoarse=pow(abs(filament2-0.5)*2.0,0.28);
 
     // radial streaks emanating from ring — like the Helix tendrils
-    float radialNoise=fbm(vec2(ang*6.0,dist*3.0)+t*0.55);
+    float radialNoise=fbm(vec2(cos(ang)*6.0,sin(ang)*6.0+dist*3.0)+t*0.55);
     float tendrils=pow(abs(radialNoise-0.5)*2.0,0.2)*smoothstep(0.6,0.15,ringDist);
 
     // === DOMAIN WARPING — dramatic sweeping currents ===
@@ -125,7 +126,7 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
     vec3 white=vec3(1.0,0.95,0.85);
     // vary color around the ring
     float ringZone=ang+t*0.15;
-    vec3 ringCol=mix(gold,hotOrange,0.5+0.5*sin(ringZone*1.5));
+    vec3 ringCol=mix(gold,hotOrange,0.5+0.5*sin(ringZone*2.0));
     ringCol=mix(ringCol,white,filFine*0.3); // bright filaments are whiter
     // brightest at the inner edge of the ring
     float ringBrightness=ringMask*(0.4+0.6*filCoarse)*(0.7+0.3*filFine);
@@ -143,7 +144,7 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
     col+=haloCol*haloMask*(0.2+0.5*haloDetail)*0.45;
 
     // 3. RED TENDRILS — wispy outer filaments
-    float outerTendrils=fbm(vec2(ang*4.0,dist*6.0)+t*0.5);
+    float outerTendrils=fbm(vec2(cos(ang)*4.0,sin(ang)*4.0+dist*6.0)+t*0.5);
     float tendrilMask=smoothstep(0.62,0.14,dist)*smoothstep(0.03,0.1,dist);
     tendrilMask*=pow(abs(outerTendrils-0.5)*2.0,0.3)*0.6;
     col+=vec3(0.7,0.1,0.04)*tendrilMask;
@@ -155,7 +156,7 @@ const IS_LOW_POWER = IS_MOBILE || IS_LOW_END;
     col=mix(col,centerCol,centerDark*0.7);
 
     // 5. BRIGHT KNOTS along the ring — clumpy detail
-    float knots=pow(fbm(vec2(ang*8.0,dist*12.0)+t*0.65),1.5);
+    float knots=pow(fbm(vec2(cos(ang)*8.0,sin(ang)*8.0+dist*12.0)+t*0.65),1.5);
     col+=vec3(1.0,0.8,0.3)*knots*ringMask*0.45;
 
     // 6. outer glow — reddish, expansive
